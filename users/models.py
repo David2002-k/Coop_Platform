@@ -30,9 +30,7 @@ class Utilisateur(models.Model):
     """ Email utilisé pour la connexion
      unique=True signifie qu'un email ne peut appartenir
     qu'à un seul utilisateur """
-    email = models.EmailField(
-        unique=True
-    )
+    email = models.EmailField(unique=True)
 
     # Mot de passe de l'utilisateur
     # Dans une vraie application il sera hashé
