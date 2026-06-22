@@ -36,7 +36,7 @@ class Formation(models.Model):
         blank=True
     )
     # La durée estimée de la formation
-    duree_estimee= models.CharField()
+    duree_estimee= models.CharField( max_length=50)
     # Etat de la formation
     # active / terminée
     statut = models.CharField(
