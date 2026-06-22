@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+     # API
+    'rest_framework',
+
     # Application ajouté
     'users',
     'formation',

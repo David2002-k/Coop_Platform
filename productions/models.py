@@ -1,5 +1,5 @@
 from django.db import models
-
+from users.models import Membre
 
 """
  TABLE : COOPERATIVE
@@ -20,6 +20,15 @@ class Cooperative(models.Model):
 
     # Localisation géographique
     localisation = models.CharField(max_length=150)
+
+    createur = models.ForeignKey(
+    'users.Membre',
+    on_delete=models.CASCADE,
+    null=True,
+    blank=True,
+    related_name="cooperatives_creees"
+    )
+
 
     # Date de création
     date_creation = models.DateField(auto_now_add=True)
