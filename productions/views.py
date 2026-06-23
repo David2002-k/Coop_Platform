@@ -3,7 +3,7 @@ from django.shortcuts import render
 from rest_framework import viewsets
 
 from core.permissions import IsAgriculteur
-
+from rest_framework.permissions import AllowAny
 from .models import Cooperative, Production, Produit
 
 from .serializers import (
@@ -33,6 +33,9 @@ class ProductionViewSet(viewsets.ModelViewSet):
 class ProduitViewSet(viewsets.ModelViewSet):
     queryset = Produit.objects.all()
     serializer_class = ProduitSerializer
-    permission_classes = [
-        IsAgriculteur
-    ]
+    def get_permissions(self):
+        # Visiteur peut consulter
+        if self.action in ['list', 'retrieve']:
+            return [AllowAny()]
+        # Création/modification/suppression réservée aux agriculteurs
+        return [IsAgriculteur()]

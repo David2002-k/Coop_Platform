@@ -1,5 +1,5 @@
 from django.db import models
-
+import uuid
 
 
 
@@ -35,8 +35,6 @@ class Commande(models.Model):
     )
     def __str__(self):
         return f"Commande {self.id}"
-
-
 
 
 """
@@ -75,9 +73,6 @@ class LigneCommande(models.Model):
         return f"{self.produit} - {self.quantite}"
 
 
-
-
-
 """
 TABLE : PAIEMENT
 Gère le paiement d'une commande
@@ -108,11 +103,18 @@ class Paiement(models.Model):
         max_length=100,
         unique=True
     )
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.statut == "payé":
+            Recu.objects.get_or_create(
+            paiement=self,
+            defaults={
+                "numero": "REC-" + str(uuid.uuid4())[:8],
+                "montant": self.montant
+            }
+        )
     def __str__(self):
         return f"Paiement {self.id}"
-
-
-
 
 
 """
@@ -141,3 +143,25 @@ class Livraison(models.Model):
     )
     def __str__(self):
         return f"Livraison {self.id}"
+
+#Table : Reçu
+class Recu(models.Model):
+    # Paiement concerné
+    paiement = models.OneToOneField(
+        Paiement,
+        on_delete=models.CASCADE
+    )
+    # Numéro du reçu
+    numero = models.CharField(
+        max_length=50,
+        unique=True
+    )
+    # Date de génération
+    date_creation = models.DateTimeField(auto_now_add=True)
+    # Montant payé
+    montant = models.DecimalField(
+        max_digits=10,
+        decimal_places=2
+    )
+    def __str__(self):
+        return f"Reçu {self.numero}"

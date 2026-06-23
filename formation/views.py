@@ -26,6 +26,10 @@ class SuiviFormationViewSet(viewsets.ModelViewSet):
     queryset = SuiviFormation.objects.all()
     serializer_class = SuiviFormationSerializer
     permission_classes = [IsAgriculteur]
+    # rendre les données privées
+    def get_queryset(self):
+        user = self.request.user
+        return SuiviFormation.objects.filter( membre__utilisateur=user)
 
 # API Quiz
 class QuizViewSet(viewsets.ModelViewSet):

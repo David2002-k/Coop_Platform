@@ -4,10 +4,11 @@ from .models import (
     Commande,
     LigneCommande,
     Paiement,
-    Livraison
+    Livraison,
+    Recu
 )
 
-# SERIALIZER COMMANDE
+# Serializer Commande
 class CommandeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Commande
@@ -20,7 +21,7 @@ class CommandeSerializer(serializers.ModelSerializer):
             'statut'
         ]
 
-# SERIALIZER LIGNE COMMANDE
+# Serializer Ligne Commande
 class LigneCommandeSerializer(serializers.ModelSerializer):
     class Meta:
         model = LigneCommande
@@ -33,7 +34,7 @@ class LigneCommandeSerializer(serializers.ModelSerializer):
             'sous_total'
         ]
 
-# SERIALIZER PAIEMENT
+# Serializer Paiement
 class PaiementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Paiement
@@ -46,7 +47,7 @@ class PaiementSerializer(serializers.ModelSerializer):
             'date_paiement',
             'reference_transaction'
         ]
-# SERIALIZER LIVRAISON
+# Serializer Livraison
 class LivraisonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Livraison
@@ -58,3 +59,10 @@ class LivraisonSerializer(serializers.ModelSerializer):
             'date_livraison',
             'statut'
         ]
+
+#Serializer Reçu
+from .models import Recu
+class RecuSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Recu
+        fields = "__all__"

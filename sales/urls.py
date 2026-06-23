@@ -6,7 +6,8 @@ from .views import (
     CommandeViewSet,
     LigneCommandeViewSet,
     PaiementViewSet,
-    LivraisonViewSet
+    LivraisonViewSet,
+    RecuViewSet
 )
 router = DefaultRouter()
 router.register(
@@ -24,6 +25,10 @@ router.register(
 router.register(
     'livraisons',
     LivraisonViewSet
+)
+router.register(
+    'recus',
+    RecuViewSet
 )
 urlpatterns = [
     path('',include(router.urls))
