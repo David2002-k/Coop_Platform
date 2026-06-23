@@ -87,3 +87,17 @@ class SuiviFormation(models.Model):
     )
     def __str__(self):
         return f"{self.membre} - {self.formation}"
+# TABLE : Quiz
+class Quiz(models.Model):
+    # Formation concernée
+    formation = models.ForeignKey(Formation, on_delete=models.CASCADE)
+    # Question du quiz
+    question = models.TextField()
+    # Les choix de réponses
+    choix_a = models.CharField(max_length=255)
+    choix_b = models.CharField(max_length=255)
+    choix_c = models.CharField(max_length=255)
+    # Exemple : A, B ou C
+    bonne_reponse = models.CharField( max_length=1)
+    def __str__(self):
+        return self.question

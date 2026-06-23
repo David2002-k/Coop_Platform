@@ -27,3 +27,18 @@ class SuiviFormationSerializer(serializers.ModelSerializer):
             'score_quiz',
             'statut'
         ]
+
+#API Quiz
+from .models import Quiz
+class QuizSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Quiz
+        fields = [
+            'id',
+            'formation',
+            'question',
+            'choix_a',
+            'choix_b',
+            'choix_c',
+            'bonne_reponse'
+        ]

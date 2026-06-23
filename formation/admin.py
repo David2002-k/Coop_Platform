@@ -6,3 +6,6 @@ from .models import (
 )
 admin.site.register(Formation)
 admin.site.register(SuiviFormation)
+
+from .models import Quiz
+admin.site.register(Quiz)
