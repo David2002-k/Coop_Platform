@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Mes formations{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">🎓 Mes formations</h2>
+
+{% if creees %}
+<h5 class="text-success">Formations que j'ai créées</h5>
+<table class="table table-striped">
+    <thead class="table-success">
+        <tr><th>Titre</th><th>Type</th><th>Durée</th><th>Statut</th></tr>
+    </thead>
+    <tbody>
+        {% for f in creees %}
+        <tr>
+            <td>{{ f.titre }}</td>
+            <td>{{ f.get_type_contenu_display }}</td>
+            <td>{{ f.duree_estimee }}</td>
+            <td>{{ f.statut }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+{% if suivies %}
+<h5 class="text-success mt-4">Formations que je suis</h5>
+<table class="table table-striped">
+    <thead class="table-success">
+        <tr><th>Formation</th><th>Progression</th><th>Score quiz</th><th>Statut</th></tr>
+    </thead>
+    <tbody>
+        {% for s in suivies %}
+        <tr>
+            <td>{{ s.formation.titre }}</td>
+            <td>
+                <div class="progress" style="height:18px;">
+                    <div class="progress-bar bg-success" role="progressbar"
+                         style="width: {{ s.progression }}%;">{{ s.progression }}%</div>
+                </div>
+            </td>
+            <td>{{ s.score_quiz }}</td>
+            <td>{{ s.get_statut_display }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+{% if not creees and not suivies %}
+<div class="alert alert-info">Aucune formation pour le moment.</div>
+{% endif %}
+{% endblock %}

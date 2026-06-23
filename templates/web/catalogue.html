@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Catalogue des produits{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">🛒 Catalogue des produits</h2>
+
+{% if produits %}
+<div class="row g-4">
+    {% for p in produits %}
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            {% if p.image %}
+            <img src="{{ p.image.url }}" class="card-img-top" alt="{{ p.nom }}">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ p.nom }}</h5>
+                <p class="card-text text-muted">{{ p.description|default:"—" }}</p>
+                <p class="mb-1"><strong>{{ p.prix_unitaire }} FCFA</strong></p>
+                <span class="badge bg-success">Stock : {{ p.quantite_stock }}</span>
+            </div>
+            <div class="card-footer bg-white border-0">
+                <a href="{% url 'ajouter_au_panier' p.id %}"
+                   class="btn btn-success btn-sm w-100">🛒 Ajouter au panier</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">Aucun produit disponible pour le moment.</div>
+{% endif %}
+{% endblock %}

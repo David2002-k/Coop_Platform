@@ -1,5 +1,98 @@
-from django.apps import AppConfig
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Plateforme des Coopératives Agricoles{% endblock %}</title>
+    {% load static %}
+    <!-- Bootstrap embarqué localement (fonctionne sans Internet) -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="{% url 'home' %}">🌾 Coopératives Agricoles</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#menu" aria-controls="menu" aria-expanded="false">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="menu">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Accueil</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'catalogue' %}">Catalogue</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'panier' %}">🛒 Panier</a></li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'tableau_de_bord' %}">Tableau de bord</a></li>
+                    {% if user.is_staff %}
+                    <li class="nav-item"><a class="nav-link" href="/admin/">Administration</a></li>
+                    {% endif %}
+                    {% endif %}
+                </ul>
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                    <li class="nav-item"><span class="nav-link text-white-50">{{ user.prenom }} ({{ user.role }})</span></li>
+                    <li class="nav-item">
+                        <form method="post" action="{% url 'deconnexion' %}" class="d-inline">
+                            {% csrf_token %}
+                            <button class="btn btn-light btn-sm mt-1" type="submit">Déconnexion</button>
+                        </form>
+                    </li>
+                    {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'inscription' %}">Inscription</a></li>
+                    <li class="nav-item"><a class="btn btn-light btn-sm mt-1" href="{% url 'connexion' %}">Connexion</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
 
+    <main class="container my-5 flex-grow-1">
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
 
-class TemplatesConfig(AppConfig):
-    name = 'templates'
+    <footer class="bg-light border-top py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6 class="text-success">🌾 Coopératives Agricoles</h6>
+                    <p class="text-muted small mb-0">
+                        Plateforme de gestion et de vente en ligne des produits
+                        des coopératives agricoles du Burkina Faso.
+                    </p>
+                </div>
+                <div class="col-md-3">
+                    <h6>Navigation</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="{% url 'home' %}" class="text-decoration-none text-muted">Accueil</a></li>
+                        <li><a href="{% url 'catalogue' %}" class="text-decoration-none text-muted">Catalogue</a></li>
+                        <li><a href="{% url 'panier' %}" class="text-decoration-none text-muted">Panier</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6>Compte</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="{% url 'connexion' %}" class="text-decoration-none text-muted">Connexion</a></li>
+                        <li><a href="{% url 'inscription' %}" class="text-decoration-none text-muted">Inscription</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <p class="text-center text-muted small mb-0">
+                Université Virtuelle du Burkina Faso · Licence 3
+                Mathématiques-Informatique · 2025–2026
+            </p>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

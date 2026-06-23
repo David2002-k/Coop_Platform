@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Mes productions{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">🌱 Mes productions</h2>
+
+{% if productions %}
+<table class="table table-striped table-hover">
+    <thead class="table-success">
+        <tr>
+            <th>Culture</th><th>Type</th><th>Quantité</th>
+            <th>Date de récolte</th><th>Validée ?</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in productions %}
+        <tr>
+            <td>{{ p.nom }}</td>
+            <td>{{ p.type_culture }}</td>
+            <td>{{ p.quantite }} {{ p.unite }}</td>
+            <td>{{ p.date_recolte }}</td>
+            <td>
+                {% if p.statut_validation %}
+                    <span class="badge bg-success">Validée</span>
+                {% else %}
+                    <span class="badge bg-warning text-dark">En attente</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="alert alert-info">Vous n'avez encore déclaré aucune production.</div>
+{% endif %}
+{% endblock %}

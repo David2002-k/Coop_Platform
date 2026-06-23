@@ -1,16 +1,50 @@
 from django.db import models
+from django.contrib.auth.models import (
+    AbstractBaseUser,
+    PermissionsMixin,
+    BaseUserManager,
+)
+
+
+class UtilisateurManager(BaseUserManager):
+    """
+    Gestionnaire (manager) du modèle Utilisateur.
+
+    C'est lui qui sait créer correctement un compte : il normalise
+    l'email et hash le mot de passe avant de l'enregistrer en base
+    (jamais de mot de passe en clair).
+    """
+
+    def create_user(self, email, mot_passe=None, password=None, **extra_fields):
+        if not email:
+            raise ValueError("L'adresse email est obligatoire")
+        email = self.normalize_email(email)
+        utilisateur = self.model(email=email, **extra_fields)
+        # On accepte « mot_passe » (français) ou « password » (Django)
+        utilisateur.set_password(password or mot_passe)
+        utilisateur.save(using=self._db)
+        return utilisateur
+
+    def create_superuser(self, email, mot_passe=None, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('role', 'ADMIN')
+        extra_fields.setdefault('nom', 'Admin')
+        extra_fields.setdefault('prenom', 'Super')
+        return self.create_user(email, mot_passe, password, **extra_fields)
+
 
 """
  TABLE : UTILISATEUR
- Cette table contient les informations communes
- à tous les acteurs de la plateforme :
- - Administrateur
- - Agriculteur/Membre
- - Acheteur
- - Formateur
- - Livreur
+ Compte de connexion commun à tous les acteurs de la plateforme :
+ Administrateur, Agriculteur/Membre, Acheteur, Formateur, Livreur.
+
+ Ce modèle EST le modèle d'authentification de Django
+ (AUTH_USER_MODEL = 'users.Utilisateur'). La connexion se fait par
+ email + mot de passe ; le champ « role » indique quel profil
+ spécialisé consulter (membre, administrateur, etc.).
 """
-class Utilisateur(models.Model):
+class Utilisateur(AbstractBaseUser, PermissionsMixin):
     # Les différents types d'utilisateurs du système
     ROLE_CHOICES = [
         ('ADMIN', 'Administrateur'),
@@ -24,24 +58,44 @@ class Utilisateur(models.Model):
     nom = models.CharField(max_length=80)
     # Prénom de l'utilisateur
     prenom = models.CharField(max_length=80)
-    """ Email utilisé pour la connexion
-     unique=True signifie qu'un email ne peut appartenir
-    qu'à un seul utilisateur """
+    # Email utilisé pour la connexion (identifiant unique)
     email = models.EmailField(unique=True)
-    # Mot de passe de l'utilisateur
-    # Dans une vraie application il sera hashé
-    mot_passe = models.CharField(max_length=255)
     # Numéro de téléphone
-    telephone = models.CharField(max_length=50)
+    telephone = models.CharField(max_length=50, blank=True)
     # Adresse de l'utilisateur
-    adresse = models.CharField(max_length=255)
+    adresse = models.CharField(max_length=255, blank=True)
     # Permet d'identifier le type d'utilisateur
     role = models.CharField(
         max_length=20,
-        choices=ROLE_CHOICES
+        choices=ROLE_CHOICES,
+        default='MEMBRE'
     )
-    # Permet de désactiver un compte sans le supprimer
-    actif = models.BooleanField(default=True)
+    # Permet de désactiver un compte sans le supprimer (champ « actif »)
+    is_active = models.BooleanField(default=True)
+    # Accès à l'interface d'administration Django
+    is_staff = models.BooleanField(default=False)
+    # Date d'inscription
+    date_inscription = models.DateTimeField(auto_now_add=True)
+
+    # Le mot de passe (« mot_passe » dans le schéma) est géré et hashé
+    # par AbstractBaseUser via le champ « password ».
+
+    objects = UtilisateurManager()
+
+    # Champ utilisé pour se connecter
+    USERNAME_FIELD = 'email'
+    # Champs demandés en plus lors d'un createsuperuser
+    REQUIRED_FIELDS = ['nom', 'prenom']
+
+    class Meta:
+        verbose_name = "Utilisateur"
+        verbose_name_plural = "Utilisateurs"
+
+    # Alias pratique : « actif » comme dans le cahier des charges
+    @property
+    def actif(self):
+        return self.is_active
+
     # Affichage lisible dans l'administration Django
     def __str__(self):
         return f"{self.nom} {self.prenom} ({self.role}) ({self.email})"

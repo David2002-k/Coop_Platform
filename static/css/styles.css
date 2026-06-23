@@ -1,0 +1,27 @@
+/* Styles de la Plateforme de Gestion des Coopératives Agricoles */
+
+body {
+    background-color: #f8f9f7;
+}
+
+.navbar-brand {
+    letter-spacing: 0.3px;
+}
+
+.card {
+    border: 0;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1) !important;
+}
+
+code {
+    color: #198754;
+}
+
+footer {
+    background-color: #fff;
+}

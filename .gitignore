@@ -1,4 +1,19 @@
-settings.py
-.env
+# Python
 __pycache__/
 *.pyc
+*.pyo
+
+# Environnement virtuel
+.venv/
+venv/
+env/
+
+# Variables d'environnement (secrets)
+.env
+
+# Base de données SQLite (générée localement)
+db.sqlite3
+
+# Fichiers collectés / téléversés
+staticfiles/
+media/

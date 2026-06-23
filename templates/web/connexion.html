@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Connexion{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h3 class="card-title mb-4 text-success">Connexion</h3>
+
+                {% if form.errors %}
+                    <div class="alert alert-danger">
+                        Email ou mot de passe incorrect.
+                    </div>
+                {% endif %}
+
+                <form method="post" action="{% url 'connexion' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Adresse email</label>
+                        <input type="email" name="username" class="form-control"
+                               placeholder="exemple@coop.bf" required autofocus>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Mot de passe</label>
+                        <input type="password" name="password" class="form-control"
+                               placeholder="Mot de passe" required>
+                    </div>
+                    <input type="hidden" name="next" value="{{ next }}">
+                    <button type="submit" class="btn btn-success w-100">Se connecter</button>
+                </form>
+
+                <hr class="my-4">
+                <p class="text-muted small mb-0">
+                    Comptes de démonstration (mot de passe <code>demo1234</code>) :
+                    <br>admin@coop.bf · membre@coop.bf · acheteur@coop.bf ·
+                    formateur@coop.bf · livreur@coop.bf
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

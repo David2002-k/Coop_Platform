@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}Mon panier{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">🛒 Mon panier</h2>
+
+{% if lignes %}
+<table class="table table-hover align-middle">
+    <thead class="table-success">
+        <tr><th>Produit</th><th>Prix unitaire</th><th>Quantité</th><th>Sous-total</th><th></th></tr>
+    </thead>
+    <tbody>
+        {% for l in lignes %}
+        <tr>
+            <td>{{ l.produit.nom }}</td>
+            <td>{{ l.produit.prix_unitaire }} FCFA</td>
+            <td>{{ l.quantite }}</td>
+            <td>{{ l.sous_total }} FCFA</td>
+            <td>
+                <a href="{% url 'retirer_du_panier' l.produit.id %}"
+                   class="btn btn-outline-danger btn-sm">Retirer</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr class="fw-bold">
+            <td colspan="3" class="text-end">Total</td>
+            <td colspan="2">{{ total }} FCFA</td>
+        </tr>
+    </tfoot>
+</table>
+
+<div class="d-flex justify-content-between">
+    <a href="{% url 'catalogue' %}" class="btn btn-outline-secondary">← Continuer mes achats</a>
+    <form method="post" action="{% url 'valider_commande' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success btn-lg">Valider et payer</button>
+    </form>
+</div>
+{% else %}
+<div class="alert alert-info">Votre panier est vide.
+    <a href="{% url 'catalogue' %}">Voir le catalogue</a>.</div>
+{% endif %}
+{% endblock %}

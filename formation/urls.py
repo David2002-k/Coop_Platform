@@ -1,4 +1,3 @@
-from django.test import TestCase
 
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter

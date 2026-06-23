@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Commande confirmée{% endblock %}
+
+{% block content %}
+<div class="text-center py-5">
+    <div class="display-1">✅</div>
+    <h2 class="text-success">Commande confirmée et payée !</h2>
+    <p class="lead text-muted">Merci pour votre achat.</p>
+
+    <div class="card mx-auto mt-4 shadow-sm" style="max-width: 420px;">
+        <div class="card-body text-start">
+            <p class="mb-1"><strong>Référence :</strong> {{ commande.reference }}</p>
+            <p class="mb-1"><strong>Montant total :</strong> {{ commande.montant_total }} FCFA</p>
+            <p class="mb-1"><strong>Statut :</strong> {{ commande.statut }}</p>
+            <p class="mb-0 text-muted small">Un reçu a été généré automatiquement.</p>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="{% url 'catalogue' %}" class="btn btn-outline-success">Continuer mes achats</a>
+        <a href="{% url 'mes_commandes' %}" class="btn btn-success">Voir mes commandes</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block title %}Tableau de bord{% endblock %}
+
+{% block content %}
+<h2 class="mb-1">Bonjour {{ user.prenom }} 👋</h2>
+<p class="text-muted">Vous êtes connecté en tant que <strong>{{ user.get_role_display }}</strong>.</p>
+
+<div class="row g-4 mt-1">
+
+    {% if est_membre %}
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-success">
+            <div class="card-body">
+                <h5 class="card-title">🌱 Mes productions</h5>
+                <p class="display-6">{{ nb_productions }}</p>
+                <a href="{% url 'mes_productions' %}" class="btn btn-success btn-sm">Voir mes productions</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">🎓 Mes formations suivies</h5>
+                <p class="display-6">{{ nb_formations }}</p>
+                <a href="{% url 'mes_formations' %}" class="btn btn-outline-success btn-sm">Voir mes formations</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if est_acheteur %}
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-success">
+            <div class="card-body">
+                <h5 class="card-title">🛒 Mes commandes</h5>
+                <p class="display-6">{{ nb_commandes }}</p>
+                <a href="{% url 'mes_commandes' %}" class="btn btn-success btn-sm">Voir mes commandes</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">📦 Catalogue</h5>
+                <p class="text-muted">Parcourir les produits disponibles.</p>
+                <a href="{% url 'catalogue' %}" class="btn btn-outline-success btn-sm">Voir le catalogue</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if est_formateur %}
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-success">
+            <div class="card-body">
+                <h5 class="card-title">🎓 Mes formations créées</h5>
+                <p class="display-6">{{ nb_formations_creees }}</p>
+                <a href="{% url 'mes_formations' %}" class="btn btn-success btn-sm">Gérer mes formations</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if est_livreur %}
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-success">
+            <div class="card-body">
+                <h5 class="card-title">🚚 Mes livraisons</h5>
+                <p class="display-6">{{ nb_livraisons }}</p>
+                <a href="{% url 'mes_livraisons' %}" class="btn btn-success btn-sm">Voir mes livraisons</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if est_admin %}
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-success">
+            <div class="card-body">
+                <h5 class="card-title">🔧 Administration</h5>
+                <p class="text-muted">Gérer toutes les données de la plateforme.</p>
+                <a href="/admin/" class="btn btn-success btn-sm">Ouvrir l'administration</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

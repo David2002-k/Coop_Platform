@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Mes commandes{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">🛒 Mes commandes</h2>
+
+{% if commandes %}
+<table class="table table-striped table-hover">
+    <thead class="table-success">
+        <tr>
+            <th>Référence</th><th>Date</th><th>Montant</th><th>Statut</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for c in commandes %}
+        <tr>
+            <td>{{ c.reference }}</td>
+            <td>{{ c.date_commande|date:"d/m/Y H:i" }}</td>
+            <td>{{ c.montant_total }} FCFA</td>
+            <td><span class="badge bg-secondary">{{ c.statut }}</span></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="alert alert-info">Vous n'avez encore passé aucune commande.</div>
+{% endif %}
+{% endblock %}

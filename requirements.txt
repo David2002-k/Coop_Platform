@@ -1,6 +1,10 @@
-Django
+Django>=5.0,<6.0
 djangorestframework
-psycopg2-binary
-python-dotenv
 djangorestframework-simplejwt
+python-dotenv
 Pillow
+# Pilote PostgreSQL (cible de production). Non requis pour SQLite.
+# psycopg 3 : pilote moderne recommandé, compatible PostgreSQL 18.
+psycopg[binary]
+# Alternative (ancien pilote) si besoin :
+# psycopg2-binary
