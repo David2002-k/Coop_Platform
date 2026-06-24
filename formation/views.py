@@ -1,5 +1,5 @@
 from rest_framework import viewsets
-
+from rest_framework.permissions import AllowAny
 from core.permissions import (
     IsFormateur,
     IsAgriculteur
@@ -19,7 +19,12 @@ from .serializers import (
 class FormationViewSet(viewsets.ModelViewSet):
     queryset = Formation.objects.all()
     serializer_class = FormationSerializer
-    permission_classes = [IsFormateur]
+    def get_permissions(self):
+        # Visiteur + membre peuvent consulter
+        if self.action in ['list', 'retrieve']:
+            return [AllowAny()]
+        # Seul formateur crée/modifie
+        return [IsFormateur()]
 
 # API SuiviFormation
 class SuiviFormationViewSet(viewsets.ModelViewSet):
