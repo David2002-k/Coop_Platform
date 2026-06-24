@@ -34,6 +34,8 @@ class UtilisateurAdmin(UserAdmin):
     list_filter = ('role', 'is_active', 'is_staff')
     search_fields = ('email', 'nom', 'prenom')
     ordering = ('email',)
+    list_per_page = 25
+    list_display_links = ('email',)
 
     fieldsets = (
         (None, {'fields': ('email', 'password')}),

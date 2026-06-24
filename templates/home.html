@@ -1,68 +1,77 @@
 {% extends 'base.html' %}
-{% block title %}Accueil — Plateforme des Coopératives Agricoles{% endblock %}
+{% block title %}Accueil — Coopératives Agricoles{% endblock %}
 
 {% block content %}
-<div class="hero mb-5 text-center">
-    <h1 class="display-5 fw-bold">Plateforme de Gestion des Coopératives Agricoles</h1>
+<div class="hero mb-4 text-center">
+    <h1 class="display-5 fw-bold">Coopératives Agricoles</h1>
     <p class="col-md-8 mx-auto fs-5" style="opacity:.92">
-        Achetez des produits agricoles locaux, gérez vos productions et
-        suivez vos formations — le tout au même endroit.
+        La plateforme qui connecte agriculteurs, acheteurs et formateurs :
+        produire, vendre et se former, au même endroit.
     </p>
     <div class="d-flex gap-2 justify-content-center mt-4 flex-wrap">
-        <a class="btn btn-light btn-lg" href="{% url 'catalogue' %}">🛒 Voir le catalogue</a>
-        {% if user.is_authenticated %}
-            <a class="btn btn-outline-light btn-lg" href="{% url 'tableau_de_bord' %}">Mon tableau de bord</a>
-        {% else %}
-            <a class="btn btn-outline-light btn-lg" href="{% url 'inscription' %}">Créer un compte</a>
+        <a class="btn btn-light btn-lg" href="{% url 'catalogue' %}">🛒 Découvrir le catalogue</a>
+        {% if not user.is_authenticated %}
+        <a class="btn btn-outline-light btn-lg" href="{% url 'inscription' %}">Créer un compte</a>
         {% endif %}
     </div>
 </div>
 
-<h3 class="text-center mb-4">Que voulez-vous faire ?</h3>
-<div class="row g-4">
-    <div class="col-md-3">
+<h4 class="text-center mb-4">Nos modules</h4>
+<div class="row g-3 mb-5">
+    <div class="col-6 col-md-3">
         <a href="{% url 'catalogue' %}" class="text-decoration-none">
-        <div class="card h-100 shadow-sm text-center">
-            <div class="card-body">
-                <div class="display-5">🛒</div>
-                <h5 class="card-title mt-2">Acheter</h5>
-                <p class="card-text text-muted small">Parcourir le catalogue
-                    et commander des produits frais.</p>
-            </div>
+        <div class="module-tile">
+            <div class="module-ico">🛒</div>
+            <div class="module-nom">Vente en ligne</div>
+            <div class="module-desc">Catalogue, panier &amp; commandes</div>
         </div></a>
     </div>
-    <div class="col-md-3">
-        <a href="{% url 'inscription' %}" class="text-decoration-none">
-        <div class="card h-100 shadow-sm text-center">
-            <div class="card-body">
-                <div class="display-5">👤</div>
-                <h5 class="card-title mt-2">S'inscrire</h5>
-                <p class="card-text text-muted small">Créer un compte pour
-                    acheter ou rejoindre une coopérative.</p>
-            </div>
+    <div class="col-6 col-md-3">
+        <a href="{% url 'liste_formations' %}" class="text-decoration-none">
+        <div class="module-tile">
+            <div class="module-ico">🎓</div>
+            <div class="module-nom">Formation</div>
+            <div class="module-desc">Cours, vidéos &amp; quiz</div>
         </div></a>
     </div>
-    <div class="col-md-3">
+    <div class="col-6 col-md-3">
         <a href="{% url 'tableau_de_bord' %}" class="text-decoration-none">
-        <div class="card h-100 shadow-sm text-center">
-            <div class="card-body">
-                <div class="display-5">📊</div>
-                <h5 class="card-title mt-2">Mon espace</h5>
-                <p class="card-text text-muted small">Productions, commandes,
-                    formations et livraisons.</p>
-            </div>
+        <div class="module-tile">
+            <div class="module-ico">🌱</div>
+            <div class="module-nom">Productions</div>
+            <div class="module-desc">Récoltes &amp; stocks</div>
         </div></a>
     </div>
-    <div class="col-md-3">
-        <a href="{% url 'connexion' %}" class="text-decoration-none">
-        <div class="card h-100 shadow-sm text-center">
-            <div class="card-body">
-                <div class="display-5">🔑</div>
-                <h5 class="card-title mt-2">Se connecter</h5>
-                <p class="card-text text-muted small">Accéder à votre compte
-                    existant.</p>
-            </div>
+    <div class="col-6 col-md-3">
+        <a href="{% url 'tableau_de_bord' %}" class="text-decoration-none">
+        <div class="module-tile">
+            <div class="module-ico">🚚</div>
+            <div class="module-nom">Livraison</div>
+            <div class="module-desc">Suivi des commandes</div>
         </div></a>
+    </div>
+</div>
+
+<div class="row align-items-center g-4 mb-4">
+    <div class="col-md-6">
+        <h4>Notre mission</h4>
+        <p class="text-muted">
+            Donner aux coopératives agricoles du Burkina Faso un outil numérique
+            simple et fiable pour mieux gérer leurs membres, valoriser leurs
+            récoltes et atteindre de nouveaux acheteurs — tout en formant les
+            agriculteurs aux meilleures pratiques.
+        </p>
+        <a href="{% url 'catalogue' %}" class="btn btn-success">Commencer</a>
+    </div>
+    <div class="col-md-6">
+        <div class="row g-2">
+            <div class="col-4"><div class="odd-tag">🌾 Maïs</div></div>
+            <div class="col-4"><div class="odd-tag">🍅 Tomate</div></div>
+            <div class="col-4"><div class="odd-tag">🥔 Pomme de terre</div></div>
+            <div class="col-4"><div class="odd-tag">🧅 Oignon</div></div>
+            <div class="col-4"><div class="odd-tag">🐔 Volaille</div></div>
+            <div class="col-4"><div class="odd-tag">🥬 Légumes</div></div>
+        </div>
     </div>
 </div>
 {% endblock %}

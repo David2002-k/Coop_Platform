@@ -204,6 +204,18 @@ JAZZMIN_SETTINGS = {
     "copyright": "Coopératives Agricoles",
     "search_model": ["users.Utilisateur", "productions.Produit", "sales.Commande"],
 
+    # Liens de la barre supérieure (permet de revenir au site)
+    "topmenu_links": [
+        {"name": "Retour au site", "url": "/", "new_window": False},
+        {"name": "Tableau de bord", "url": "/tableau-de-bord/", "new_window": False},
+        {"name": "Espace gestion", "url": "/gestion/", "new_window": False},
+    ],
+    # Liens du menu utilisateur (en haut à droite)
+    "usermenu_links": [
+        {"name": "Retour au site", "url": "/", "icon": "fas fa-arrow-left"},
+    ],
+    "navigation_expanded": True,
+
     # Menu latéral ordonné et regroupé
     "order_with_respect_to": [
         "users", "productions", "sales", "formation", "auth",
@@ -231,7 +243,7 @@ JAZZMIN_SETTINGS = {
     },
     "default_icon_parents": "fas fa-chevron-circle-right",
     "default_icon_children": "fas fa-circle",
-    "related_modal_active": True,   # édition dans une fenêtre modale (plus fluide)
+    "related_modal_active": False,  # édition en pleine page (enregistrement fiable)
     "show_ui_builder": False,
 }
 

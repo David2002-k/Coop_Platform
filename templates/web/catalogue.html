@@ -2,23 +2,43 @@
 {% block title %}Catalogue des produits{% endblock %}
 
 {% block content %}
-<h2 class="mb-4">🛒 Catalogue des produits</h2>
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+    <h2 class="mb-0">🛒 Catalogue des produits</h2>
+    <form method="get" action="{% url 'catalogue' %}" class="d-flex" style="max-width:360px;">
+        <input type="search" name="q" value="{{ recherche }}" class="form-control me-2"
+               placeholder="Rechercher un produit…">
+        <button class="btn btn-success">Rechercher</button>
+    </form>
+</div>
+
+{% if recherche %}
+<p class="text-muted">Résultats pour « <strong>{{ recherche }}</strong> » —
+    <a href="{% url 'catalogue' %}">tout afficher</a></p>
+{% endif %}
 
 {% if produits %}
 <div class="row g-4">
     {% for p in produits %}
-    <div class="col-md-4">
+    <div class="col-sm-6 col-lg-4 col-xl-3">
         <div class="card h-100 shadow-sm">
-            {% if p.image %}
-            <img src="{{ p.image.url }}" class="card-img-top" alt="{{ p.nom }}">
-            {% endif %}
-            <div class="card-body">
-                <h5 class="card-title">{{ p.nom }}</h5>
-                <p class="card-text text-muted">{{ p.description|default:"—" }}</p>
-                <p class="mb-1"><strong>{{ p.prix_unitaire }} FCFA</strong></p>
-                <span class="badge bg-success">Stock : {{ p.quantite_stock }}</span>
+            <div class="ratio ratio-4x3 bg-light d-flex align-items-center justify-content-center"
+                 style="border-radius:12px 12px 0 0; overflow:hidden;">
+                {% if p.image %}
+                    <img src="{{ p.image.url }}" alt="{{ p.nom }}"
+                         style="object-fit:cover; width:100%; height:100%;">
+                {% else %}
+                    <span style="font-size:3rem;">🥦</span>
+                {% endif %}
             </div>
-            <div class="card-footer bg-white border-0">
+            <div class="card-body">
+                <h6 class="card-title mb-1">{{ p.nom }}</h6>
+                <p class="card-text text-muted small mb-2">{{ p.description|truncatewords:10|default:"" }}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <strong class="text-success">{{ p.prix_unitaire }} FCFA</strong>
+                    <span class="badge bg-light text-dark border">Stock : {{ p.quantite_stock }}</span>
+                </div>
+            </div>
+            <div class="card-footer bg-white border-0 pt-0">
                 <a href="{% url 'ajouter_au_panier' p.id %}"
                    class="btn btn-success btn-sm w-100">🛒 Ajouter au panier</a>
             </div>
@@ -27,6 +47,9 @@
     {% endfor %}
 </div>
 {% else %}
-<div class="alert alert-info">Aucun produit disponible pour le moment.</div>
+<div class="alert alert-info">
+    {% if recherche %}Aucun produit ne correspond à votre recherche.
+    {% else %}Aucun produit disponible pour le moment.{% endif %}
+</div>
 {% endif %}
 {% endblock %}

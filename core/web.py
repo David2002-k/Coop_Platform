@@ -65,9 +65,13 @@ def inscription(request):
 # Catalogue & panier d'achat (stocké en session)
 # ---------------------------------------------------------------------
 def catalogue(request):
-    """Catalogue public des produits disponibles à la vente."""
+    """Catalogue public des produits disponibles, avec recherche."""
+    recherche = request.GET.get('q', '').strip()
     produits = Produit.objects.filter(diponible=True).select_related('production')
-    return render(request, 'web/catalogue.html', {'produits': produits})
+    if recherche:
+        produits = produits.filter(nom__icontains=recherche)
+    return render(request, 'web/catalogue.html',
+                  {'produits': produits, 'recherche': recherche})
 
 
 def _get_panier(request):
@@ -566,7 +570,39 @@ def gestion(request):
         messages.error(request, "Accès réservé aux administrateurs.")
         return redirect('tableau_de_bord')
 
+    import json as _json
+    from collections import OrderedDict
+
     profil = getattr(request.user, 'administrateur', None)
+    payees = Commande.objects.filter(statut='payée')
+
+    # --- Ventes des 6 derniers mois (graphique en ligne) ---
+    aujourd = timezone.now()
+    mois_labels, mois_valeurs = [], []
+    noms_mois = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin',
+                 'Juil', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc']
+    for i in range(5, -1, -1):
+        annee = aujourd.year
+        mois = aujourd.month - i
+        while mois <= 0:
+            mois += 12
+            annee -= 1
+        total = sum(c.montant_total for c in payees.filter(
+            date_commande__year=annee, date_commande__month=mois))
+        mois_labels.append(noms_mois[mois - 1])
+        mois_valeurs.append(float(total))
+
+    # --- Répartition des commandes par statut (graphique camembert) ---
+    statuts = OrderedDict()
+    for c in Commande.objects.all():
+        statuts[c.statut] = statuts.get(c.statut, 0) + 1
+
+    # --- Top 5 des produits les plus commandés ---
+    top = {}
+    for l in LigneCommande.objects.select_related('produit'):
+        top[l.produit.nom] = top.get(l.produit.nom, 0) + l.quantite
+    top_tries = sorted(top.items(), key=lambda x: x[1], reverse=True)[:5]
+
     contexte = {
         'rubrique': 'tableau',
         'profil': profil,
@@ -576,7 +612,14 @@ def gestion(request):
         'nb_productions_attente': Production.objects.filter(statut_validation=False).count(),
         'nb_produits': Produit.objects.count(),
         'nb_commandes': Commande.objects.count(),
-        'total_ventes': sum(c.montant_total for c in Commande.objects.filter(statut='payée')),
+        'total_ventes': sum(c.montant_total for c in payees),
+        # Données JSON pour les graphiques
+        'ventes_labels': _json.dumps(mois_labels),
+        'ventes_valeurs': _json.dumps(mois_valeurs),
+        'statuts_labels': _json.dumps(list(statuts.keys())),
+        'statuts_valeurs': _json.dumps(list(statuts.values())),
+        'top_labels': _json.dumps([t[0] for t in top_tries]),
+        'top_valeurs': _json.dumps([float(t[1]) for t in top_tries]),
     }
     return render(request, 'web/gestion/tableau.html', contexte)
 
