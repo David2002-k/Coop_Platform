@@ -1,27 +1,137 @@
-/* Styles de la Plateforme de Gestion des Coopératives Agricoles */
+/* ============================================================
+   Thème professionnel — Plateforme des Coopératives Agricoles
+   ============================================================ */
+
+:root {
+    --vert: #1b5e20;
+    --vert-clair: #2e7d32;
+    --vert-pale: #e8f5e9;
+    --gris-fond: #f4f6f8;
+    --gris-bord: #e3e8ee;
+    --texte: #1f2d3d;
+    --texte-doux: #62718a;
+}
 
 body {
-    background-color: #f8f9f7;
+    background-color: var(--gris-fond);
+    color: var(--texte);
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
-.navbar-brand {
-    letter-spacing: 0.3px;
+/* ---------- Barre de navigation ---------- */
+.navbar.bg-success {
+    background: linear-gradient(90deg, var(--vert), var(--vert-clair)) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .08);
 }
+.navbar-brand { letter-spacing: .3px; }
+.navbar .nav-link {
+    border-radius: 6px;
+    padding: .35rem .7rem !important;
+    transition: background-color .15s ease;
+}
+.navbar .nav-link:hover { background-color: rgba(255, 255, 255, .15); }
 
+/* ---------- Titres ---------- */
+h1, h2, h3, h4, h5 { color: var(--texte); font-weight: 600; }
+
+/* ---------- Cartes ---------- */
 .card {
-    border: 0;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    border: 1px solid var(--gris-bord);
+    border-radius: 12px;
+    transition: transform .15s ease, box-shadow .15s ease;
+}
+.card.shadow-sm { box-shadow: 0 1px 3px rgba(16, 24, 40, .06) !important; }
+.card:hover { box-shadow: 0 8px 24px rgba(16, 24, 40, .10) !important; }
+
+/* ---------- Boutons ---------- */
+.btn { border-radius: 8px; font-weight: 500; }
+.btn-success {
+    background-color: var(--vert-clair);
+    border-color: var(--vert-clair);
+}
+.btn-success:hover { background-color: var(--vert); border-color: var(--vert); }
+.btn-outline-success { color: var(--vert-clair); border-color: var(--vert-clair); }
+
+/* ---------- Tableaux ---------- */
+.table { background: #fff; border-radius: 12px; overflow: hidden; }
+.table thead.table-success th {
+    background-color: var(--vert-pale);
+    color: var(--vert);
+    border-bottom: 2px solid var(--vert-clair);
+    font-weight: 600;
 }
 
-.card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1) !important;
-}
+/* ---------- Badges ---------- */
+.badge.bg-success { background-color: var(--vert-clair) !important; }
 
-code {
-    color: #198754;
+/* ---------- Cartes statistiques (admin) ---------- */
+.stat-card {
+    background: #fff;
+    border: 1px solid var(--gris-bord);
+    border-radius: 12px;
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    height: 100%;
 }
+.stat-card .stat-ico {
+    width: 52px; height: 52px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem;
+    background: var(--vert-pale);
+}
+.stat-card .stat-val { font-size: 1.8rem; font-weight: 700; line-height: 1; }
+.stat-card .stat-lib { color: var(--texte-doux); font-size: .9rem; }
 
-footer {
-    background-color: #fff;
+/* ---------- Menu latéral admin (sidebar) ---------- */
+.admin-sidebar {
+    background: #fff;
+    border: 1px solid var(--gris-bord);
+    border-radius: 12px;
+    padding: .75rem;
+    position: sticky;
+    top: 1rem;
 }
+.admin-sidebar .side-title {
+    font-size: .75rem;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--texte-doux);
+    padding: .5rem .75rem;
+}
+.admin-sidebar a {
+    display: flex; align-items: center; gap: .6rem;
+    padding: .6rem .75rem;
+    border-radius: 8px;
+    color: var(--texte);
+    text-decoration: none;
+    font-weight: 500;
+}
+.admin-sidebar a:hover { background: var(--gris-fond); }
+.admin-sidebar a.actif { background: var(--vert-pale); color: var(--vert); }
+
+/* ---------- Lecteur vidéo ---------- */
+.video-pro {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(16, 24, 40, .12);
+    background: #000;
+}
+.video-pro iframe, .video-pro video { display: block; width: 100%; border: 0; }
+
+/* ---------- Pied de page ---------- */
+footer { background: #fff; border-top: 1px solid var(--gris-bord); }
+footer a { color: var(--texte-doux); text-decoration: none; }
+footer a:hover { color: var(--vert-clair); }
+
+/* ---------- Page d'accueil ---------- */
+.hero {
+    background: linear-gradient(135deg, var(--vert), var(--vert-clair));
+    color: #fff;
+    border-radius: 16px;
+    padding: 3.5rem 2rem;
+}
+.hero h1 { color: #fff; }
+.hero .btn-light { color: var(--vert); font-weight: 600; }

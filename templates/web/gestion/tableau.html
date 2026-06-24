@@ -1,0 +1,71 @@
+{% extends 'web/gestion/base_gestion.html' %}
+{% block title %}Administration{% endblock %}
+
+{% block gestion %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-0">Tableau de bord</h2>
+        <p class="text-muted mb-0">Pilotage de la coopérative</p>
+    </div>
+    <span class="badge bg-dark fs-6 align-self-start">Niveau : {{ niveau }}</span>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card">
+            <div class="stat-ico">👥</div>
+            <div><div class="stat-val">{{ nb_membres }}</div>
+                 <div class="stat-lib">Membres</div></div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card">
+            <div class="stat-ico">⏳</div>
+            <div><div class="stat-val">{{ nb_productions_attente }}</div>
+                 <div class="stat-lib">À valider</div></div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card">
+            <div class="stat-ico">📦</div>
+            <div><div class="stat-val">{{ nb_produits }}</div>
+                 <div class="stat-lib">Produits</div></div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card">
+            <div class="stat-ico">💰</div>
+            <div><div class="stat-val">{{ total_ventes }}</div>
+                 <div class="stat-lib">Ventes (FCFA)</div></div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-6">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5>✅ Valider les productions</h5>
+                <p class="text-muted small">Examiner les récoltes déclarées et les
+                    publier au catalogue.</p>
+                <a href="{% url 'gestion_productions' %}" class="btn btn-success btn-sm">Ouvrir</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5>👥 Gérer les membres</h5>
+                <p class="text-muted small">Consulter les adhérents et leurs cotisations.</p>
+                <a href="{% url 'gestion_membres' %}" class="btn btn-success btn-sm">Ouvrir</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if not peut_gerer %}
+<div class="alert alert-warning mt-4">
+    Niveau d'accès <strong>{{ niveau }}</strong> : consultation seule, sans modification.
+</div>
+{% endif %}
+{% endblock %}

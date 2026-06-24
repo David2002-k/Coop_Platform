@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% block title %}{{ formation.titre }}{% endblock %}
+
+{% block content %}
+<a href="{% url 'liste_formations' %}" class="btn btn-outline-secondary btn-sm mb-3">← Formations</a>
+
+<span class="badge bg-secondary mb-2">{{ formation.get_type_contenu_display }}</span>
+<h2>{{ formation.titre }}</h2>
+<p class="text-muted">Par {{ formation.formateur.utilisateur.prenom }}
+    {{ formation.formateur.utilisateur.nom }} · ⏱️ {{ formation.duree_estimee }}</p>
+
+<p>{{ formation.description }}</p>
+
+{# ---- Vidéo intégrée (YouTube / Vimeo) ---- #}
+{% if video_embed %}
+<div class="mb-4">
+    <h6 class="mb-2">▶️ Vidéo de la formation</h6>
+    <div class="video-pro ratio ratio-16x9">
+        <iframe src="{{ video_embed }}" allowfullscreen
+                referrerpolicy="strict-origin-when-cross-origin"
+                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"></iframe>
+    </div>
+    <p class="small text-muted mt-2 mb-0">
+        La vidéo ne s'affiche pas ?
+        <a href="{{ formation.contenu }}" target="_blank" rel="noopener">Ouvrir sur YouTube ↗</a>
+    </p>
+</div>
+{% elif formation.contenu %}
+<div class="card mb-3">
+    <div class="card-body">
+        <h6>Contenu</h6>
+        {% if "http" in formation.contenu %}
+            <a href="{{ formation.contenu }}" target="_blank" class="btn btn-outline-success btn-sm">
+                ▶️ Ouvrir la ressource</a>
+        {% else %}
+            <p style="white-space: pre-line;" class="mb-0">{{ formation.contenu }}</p>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+{# ---- Fichier uploadé : vidéo (lecteur pro) ou PDF (téléchargement) ---- #}
+{% if formation.fichier %}
+{% with url=formation.fichier.url %}
+{% if ".mp4" in url or ".webm" in url or ".mov" in url %}
+<div class="mb-4">
+    <h6 class="mb-2">▶️ Vidéo</h6>
+    <div class="video-pro ratio ratio-16x9">
+        <video controls controlslist="nodownload" preload="metadata">
+            <source src="{{ url }}">
+            Votre navigateur ne peut pas lire la vidéo.
+        </video>
+    </div>
+</div>
+{% else %}
+<div class="card mb-3">
+    <div class="card-body d-flex justify-content-between align-items-center">
+        <span>📄 Document de la formation (PDF)</span>
+        <a href="{{ url }}" class="btn btn-success btn-sm" download>⬇️ Télécharger</a>
+    </div>
+</div>
+{% endif %}
+{% endwith %}
+{% endif %}
+
+{% if questions %}
+<div class="card border-success">
+    <div class="card-body">
+        <h5 class="text-success">📝 Quiz</h5>
+        {% if suivi and suivi.statut == 'TERMINEE' %}
+            <div class="alert alert-info">Vous avez déjà passé ce quiz —
+                score : <strong>{{ suivi.score_quiz }} %</strong>. Vous pouvez le refaire.</div>
+        {% endif %}
+        {% if est_membre %}
+        <form method="post" action="{% url 'passer_quiz' formation.id %}" id="quizForm">
+            {% csrf_token %}
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-muted small">Question <span id="qNum">1</span>
+                    / {{ questions|length }}</span>
+                <div class="progress flex-grow-1 ms-3" style="height:6px;">
+                    <div id="qProgress" class="progress-bar bg-success" style="width:0%"></div>
+                </div>
+            </div>
+
+            {% for q in questions %}
+            <div class="quiz-q" data-index="{{ forloop.counter0 }}"
+                 style="{% if not forloop.first %}display:none;{% endif %}">
+                <p class="fw-bold mb-3">{{ forloop.counter }}. {{ q.question }}</p>
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="radio" name="q{{ q.id }}" value="A" id="q{{ q.id }}a">
+                    <label class="form-check-label" for="q{{ q.id }}a">A) {{ q.choix_a }}</label>
+                </div>
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="radio" name="q{{ q.id }}" value="B" id="q{{ q.id }}b">
+                    <label class="form-check-label" for="q{{ q.id }}b">B) {{ q.choix_b }}</label>
+                </div>
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="radio" name="q{{ q.id }}" value="C" id="q{{ q.id }}c">
+                    <label class="form-check-label" for="q{{ q.id }}c">C) {{ q.choix_c }}</label>
+                </div>
+            </div>
+            {% endfor %}
+
+            <div class="d-flex justify-content-between mt-4">
+                <button type="button" class="btn btn-outline-secondary" id="btnPrec" disabled>← Précédent</button>
+                <button type="button" class="btn btn-success" id="btnSuiv">Suivant →</button>
+                <button type="submit" class="btn btn-success" id="btnValider" style="display:none;">
+                    ✓ Valider mes réponses</button>
+            </div>
+        </form>
+
+        <script>
+        (function () {
+            var questions = document.querySelectorAll('#quizForm .quiz-q');
+            var total = questions.length, courant = 0;
+            var btnPrec = document.getElementById('btnPrec');
+            var btnSuiv = document.getElementById('btnSuiv');
+            var btnValider = document.getElementById('btnValider');
+            var qNum = document.getElementById('qNum');
+            var qProgress = document.getElementById('qProgress');
+
+            function afficher(i) {
+                questions.forEach(function (q, idx) {
+                    q.style.display = (idx === i) ? 'block' : 'none';
+                });
+                qNum.textContent = i + 1;
+                qProgress.style.width = ((i + 1) / total * 100) + '%';
+                btnPrec.disabled = (i === 0);
+                btnSuiv.style.display = (i === total - 1) ? 'none' : 'inline-block';
+                btnValider.style.display = (i === total - 1) ? 'inline-block' : 'none';
+            }
+            btnSuiv.addEventListener('click', function () {
+                if (courant < total - 1) { courant++; afficher(courant); }
+            });
+            btnPrec.addEventListener('click', function () {
+                if (courant > 0) { courant--; afficher(courant); }
+            });
+            afficher(0);
+        })();
+        </script>
+        {% else %}
+        <p class="text-muted">Connectez-vous en tant que membre pour passer le quiz.</p>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

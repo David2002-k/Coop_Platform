@@ -2,7 +2,12 @@
 {% block title %}Mes formations{% endblock %}
 
 {% block content %}
-<h2 class="mb-4">🎓 Mes formations</h2>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">🎓 Mes formations</h2>
+    {% if user.formateur %}
+    <a href="{% url 'creer_formation' %}" class="btn btn-success">+ Créer une formation</a>
+    {% endif %}
+</div>
 
 {% if creees %}
 <h5 class="text-success">Formations que j'ai créées</h5>
@@ -32,7 +37,7 @@
     <tbody>
         {% for s in suivies %}
         <tr>
-            <td>{{ s.formation.titre }}</td>
+            <td><a href="{% url 'formation_detail' s.formation.id %}">{{ s.formation.titre }}</a></td>
             <td>
                 <div class="progress" style="height:18px;">
                     <div class="progress-bar bg-success" role="progressbar"

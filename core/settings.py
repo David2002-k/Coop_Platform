@@ -38,6 +38,9 @@ ALLOWED_HOSTS = os.getenv(
 # Application definition
 
 INSTALLED_APPS = [
+    # Thème d'administration moderne (doit précéder django.contrib.admin)
+    'jazzmin',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -170,6 +173,14 @@ LOGOUT_REDIRECT_URL = '/'
 from django.contrib.messages import constants as messages_constants
 MESSAGE_TAGS = {messages_constants.ERROR: 'danger'}
 
+# Paiement MoneyFusion (FusionPay)
+# URL d'API personnelle du marchand (tableau de bord MoneyFusion).
+# Laissée vide -> mode simulation (paiement validé automatiquement),
+# pratique en développement local.
+MONEYFUSION_API_URL = os.getenv('MONEYFUSION_API_URL', '')
+# Adresse publique du site (pour construire return_url / webhook_url).
+SITE_URL = os.getenv('SITE_URL', 'http://127.0.0.1:8000')
+
 # Configuration de l'API REST :
 # - Authentification par jeton JWT (Authorization: Bearer <token>)
 # - Accès réservé par défaut aux utilisateurs authentifiés
@@ -180,4 +191,56 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
+}
+
+# ============================================================
+#  Interface d'administration (thème Jazzmin) — fluide & pro
+# ============================================================
+JAZZMIN_SETTINGS = {
+    "site_title": "Administration",
+    "site_header": "Coopératives Agricoles",
+    "site_brand": "🌾 Coopératives",
+    "welcome_sign": "Bienvenue dans l'administration",
+    "copyright": "Coopératives Agricoles",
+    "search_model": ["users.Utilisateur", "productions.Produit", "sales.Commande"],
+
+    # Menu latéral ordonné et regroupé
+    "order_with_respect_to": [
+        "users", "productions", "sales", "formation", "auth",
+    ],
+    "icons": {
+        "auth": "fas fa-shield-alt",
+        "auth.Group": "fas fa-users-cog",
+        "users.Utilisateur": "fas fa-user",
+        "users.Membre": "fas fa-user-tractor",
+        "users.Administrateur": "fas fa-user-tie",
+        "users.Acheteur": "fas fa-user-tag",
+        "users.Formateur": "fas fa-chalkboard-teacher",
+        "users.Livreur": "fas fa-truck",
+        "productions.Cooperative": "fas fa-warehouse",
+        "productions.Production": "fas fa-seedling",
+        "productions.Produit": "fas fa-box",
+        "sales.Commande": "fas fa-shopping-cart",
+        "sales.LigneCommande": "fas fa-list",
+        "sales.Paiement": "fas fa-credit-card",
+        "sales.Livraison": "fas fa-shipping-fast",
+        "sales.Recu": "fas fa-receipt",
+        "formation.Formation": "fas fa-graduation-cap",
+        "formation.SuiviFormation": "fas fa-chart-line",
+        "formation.Quiz": "fas fa-question-circle",
+    },
+    "default_icon_parents": "fas fa-chevron-circle-right",
+    "default_icon_children": "fas fa-circle",
+    "related_modal_active": True,   # édition dans une fenêtre modale (plus fluide)
+    "show_ui_builder": False,
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "theme": "flatly",              # thème clair et épuré
+    "navbar": "navbar-success navbar-dark",
+    "sidebar": "sidebar-dark-success",
+    "accent": "accent-success",
+    "brand_colour": "navbar-success",
+    "sidebar_nav_compact_style": True,
+    "actions_sticky_top": True,
 }

@@ -21,11 +21,26 @@
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Accueil</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'catalogue' %}">Catalogue</a></li>
+                    {% if not user.is_authenticated or user.acheteur %}
                     <li class="nav-item"><a class="nav-link" href="{% url 'panier' %}">🛒 Panier</a></li>
+                    {% endif %}
                     {% if user.is_authenticated %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'liste_formations' %}">Formations</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'tableau_de_bord' %}">Tableau de bord</a></li>
-                    {% if user.is_staff %}
-                    <li class="nav-item"><a class="nav-link" href="/admin/">Administration</a></li>
+                    {% if user.membre %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'mes_productions' %}">Mes productions</a></li>
+                    {% endif %}
+                    {% if user.acheteur %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'mes_commandes' %}">Mes commandes</a></li>
+                    {% endif %}
+                    {% if user.formateur %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'mes_formations' %}">Mes formations</a></li>
+                    {% endif %}
+                    {% if user.livreur %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'mes_livraisons' %}">Mes livraisons</a></li>
+                    {% endif %}
+                    {% if user.is_staff or user.administrateur %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'gestion' %}">Gestion</a></li>
                     {% endif %}
                     {% endif %}
                 </ul>
@@ -86,8 +101,7 @@
             </div>
             <hr>
             <p class="text-center text-muted small mb-0">
-                Université Virtuelle du Burkina Faso · Licence 3
-                Mathématiques-Informatique · 2025–2026
+                © 2026 Coopératives Agricoles — Tous droits réservés.
             </p>
         </div>
     </footer>

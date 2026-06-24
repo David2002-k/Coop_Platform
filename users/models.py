@@ -152,8 +152,33 @@ class Administrateur(models.Model):
     )
     #Fonction occupée
     fonction = models.CharField(max_length=80)
-    # Niveau de permission
-    niveau_acces = models.CharField(max_length=20)
+    # Niveau de permission de l'administrateur
+    NIVEAU_ACCES = [
+        ('LECTURE', 'Lecture seule'),
+        ('GESTION', 'Gestion'),
+        ('TOTAL', 'Accès total'),
+    ]
+    niveau_acces = models.CharField(
+        max_length=20,
+        choices=NIVEAU_ACCES,
+        default='GESTION'
+    )
+
+    # --- Droits dérivés du niveau d'accès ---
+    @property
+    def peut_consulter(self):
+        """Tous les niveaux peuvent consulter les données."""
+        return True
+
+    @property
+    def peut_gerer(self):
+        """Gérer les membres / valider les productions."""
+        return self.niveau_acces in ('GESTION', 'TOTAL')
+
+    @property
+    def peut_tout(self):
+        """Accès complet (paramétrage, suppression…)."""
+        return self.niveau_acces == 'TOTAL'
 """
 TABLE : ACHETEUR
 Client qui achète les produits agricoles

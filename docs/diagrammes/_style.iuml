@@ -1,0 +1,33 @@
+' Style professionnel commun à tous les diagrammes
+skinparam dpi 200
+skinparam shadowing false
+skinparam defaultFontName "DejaVu Sans"
+skinparam backgroundColor #FFFFFF
+skinparam roundcorner 6
+skinparam ArrowColor #2C3E50
+skinparam class {
+  BackgroundColor #FDFEFE
+  BorderColor #2C3E50
+  ArrowColor #2C3E50
+  AttributeFontColor #1B2631
+  HeaderBackgroundColor #D6EAF8
+}
+skinparam entity {
+  BackgroundColor #FDFEFE
+  BorderColor #2C3E50
+}
+skinparam usecase {
+  BackgroundColor #EBF5FB
+  BorderColor #2C3E50
+}
+skinparam actor {
+  BackgroundColor #D6EAF8
+  BorderColor #2C3E50
+}
+skinparam sequence {
+  ParticipantBackgroundColor #D6EAF8
+  ParticipantBorderColor #2C3E50
+  ActorBackgroundColor #D6EAF8
+  LifeLineBorderColor #5D6D7E
+  ArrowColor #2C3E50
+}

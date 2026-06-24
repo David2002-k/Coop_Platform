@@ -5,9 +5,9 @@
 <h2 class="mb-4">🚚 Mes livraisons</h2>
 
 {% if livraisons %}
-<table class="table table-striped table-hover">
+<table class="table table-striped table-hover align-middle">
     <thead class="table-success">
-        <tr><th>Commande</th><th>Adresse</th><th>Statut</th><th>Date prévue</th></tr>
+        <tr><th>Commande</th><th>Adresse</th><th>Statut</th><th>Mettre à jour</th></tr>
     </thead>
     <tbody>
         {% for l in livraisons %}
@@ -15,7 +15,18 @@
             <td>{{ l.commande.reference }}</td>
             <td>{{ l.adresse_livraison }}</td>
             <td><span class="badge bg-secondary">{{ l.statut }}</span></td>
-            <td>{{ l.date_livraison|date:"d/m/Y"|default:"—" }}</td>
+            <td>
+                <form method="post" action="{% url 'changer_statut_livraison' l.id %}"
+                      class="d-flex gap-1">
+                    {% csrf_token %}
+                    <select name="statut" class="form-select form-select-sm" style="width:150px">
+                        <option value="en préparation">En préparation</option>
+                        <option value="en cours">En cours</option>
+                        <option value="livrée">Livrée</option>
+                    </select>
+                    <button class="btn btn-success btn-sm">OK</button>
+                </form>
+            </td>
         </tr>
         {% endfor %}
     </tbody>

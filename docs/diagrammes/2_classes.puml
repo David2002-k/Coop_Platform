@@ -1,0 +1,124 @@
+@startuml
+!include _style.iuml
+title Diagramme de classes — Plateforme de Gestion des Coopératives Agricoles
+skinparam classAttributeIconSize 0
+
+class Utilisateur {
+  - nom : String
+  - prenom : String
+  - email : String
+  - mot_passe : String
+  - telephone : String
+  - adresse : String
+  - role : String
+  - actif : Boolean
+}
+
+class Cooperative {
+  - nom : String
+  - localisation : String
+  - secteur_activite : String
+  - date_creation : Date
+}
+
+class Membre {
+  - numero_adhesion : String
+  - date_adhesion : Date
+  - statut_cotisation : Boolean
+  - montant_cotisation : Decimal
+}
+class Administrateur {
+  - fonction : String
+  - niveau_acces : String
+}
+class Acheteur {
+  - adresse_livraison : String
+}
+class Formateur {
+  - specialite : String
+  - biographie : String
+}
+class Livreur {
+  - vehicule : String
+  - zone_couverture : String
+  - disponible : Boolean
+}
+
+class Production {
+  - type_culture : String
+  - quantite : Decimal
+  - unite : String
+  - date_recolte : Date
+  - statut_validation : Boolean
+}
+class Produit {
+  - nom : String
+  - prix_unitaire : Decimal
+  - quantite_stock : Integer
+  - disponible : Boolean
+}
+class Commande {
+  - reference : String
+  - date_commande : DateTime
+  - montant_total : Decimal
+  - statut : String
+}
+class LigneCommande {
+  - quantite : Integer
+  - prix_unitaire : Decimal
+  - sous_total : Decimal
+}
+class Paiement {
+  - montant : Decimal
+  - methode : String
+  - reference_transaction : String
+  - statut : String
+}
+class Livraison {
+  - adresse : String
+  - statut : String
+  - date_prevue : Date
+}
+class Recu {
+  - numero : String
+  - montant : Decimal
+  - date_creation : DateTime
+}
+class Formation {
+  - titre : String
+  - contenu : String
+  - type_contenu : String
+  - duree_estimee : Integer
+}
+class SuiviFormation {
+  - progression : Decimal
+  - score_quiz : Decimal
+  - statut : String
+}
+class Quiz {
+  - question : String
+  - bonne_reponse : String
+}
+
+Utilisateur <|-- Membre
+Utilisateur <|-- Administrateur
+Utilisateur <|-- Acheteur
+Utilisateur <|-- Formateur
+Utilisateur <|-- Livreur
+
+Cooperative "1" o-- "0..*" Membre : regroupe >
+Cooperative "1" o-- "0..*" Administrateur : gère >
+Membre "1" --> "0..*" Production : déclare >
+Production "1" --> "1" Produit : génère >
+Acheteur "1" --> "0..*" Commande : passe >
+Commande "1" *-- "1..*" LigneCommande : contient >
+Produit "1" --> "0..*" LigneCommande
+Commande "1" --> "1" Paiement : règle >
+Paiement "1" --> "1" Recu : produit >
+Commande "1" --> "1" Livraison
+Livreur "1" --> "0..*" Livraison : assure >
+Formateur "1" --> "0..*" Formation : publie >
+Membre "0..*" --> "0..*" Formation : suit >
+Formation "1" --> "0..*" SuiviFormation
+Formation "1" --> "0..*" Quiz : comporte >
+@enduml

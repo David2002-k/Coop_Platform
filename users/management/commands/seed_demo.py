@@ -55,7 +55,7 @@ class Command(BaseCommand):
         Administrateur.objects.get_or_create(
             utilisateur=admin_coop,
             defaults=dict(cooperative=coop, fonction="Gérante",
-                          niveau_acces="total"),
+                          niveau_acces="TOTAL"),
         )
 
         # 4. Membre (agriculteur)

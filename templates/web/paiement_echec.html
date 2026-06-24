@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Paiement non confirmé{% endblock %}
+
+{% block content %}
+<div class="text-center py-5">
+    <div class="display-1">⏳</div>
+    <h2 class="text-warning">Paiement non confirmé</h2>
+    <p class="lead text-muted">
+        Votre paiement pour la commande
+        <strong>{{ commande.reference }}</strong> n'a pas encore été confirmé.
+    </p>
+    <p class="text-muted">
+        S'il a bien été débité, le statut se mettra à jour automatiquement.
+        Vous pouvez vérifier l'état dans « Mes commandes ».
+    </p>
+    <div class="mt-4">
+        <a href="{% url 'mes_commandes' %}" class="btn btn-success">Voir mes commandes</a>
+        <a href="{% url 'panier' %}" class="btn btn-outline-secondary">Réessayer</a>
+    </div>
+</div>
+{% endblock %}

@@ -31,13 +31,22 @@
     </tfoot>
 </table>
 
-<div class="d-flex justify-content-between">
-    <a href="{% url 'catalogue' %}" class="btn btn-outline-secondary">← Continuer mes achats</a>
-    <form method="post" action="{% url 'valider_commande' %}">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-success btn-lg">Valider et payer</button>
-    </form>
-</div>
+<form method="post" action="{% url 'valider_commande' %}" class="card p-3 shadow-sm">
+    {% csrf_token %}
+    <h5 class="mb-3">Paiement Mobile Money</h5>
+    <div class="row align-items-end">
+        <div class="col-md-6 mb-2">
+            <label class="form-label">Votre numéro Mobile Money</label>
+            <input type="tel" name="numero" class="form-control"
+                   placeholder="Ex : 70000000" required>
+            <div class="form-text">Orange Money, Moov Money, Wave…</div>
+        </div>
+        <div class="col-md-6 mb-2 text-md-end">
+            <a href="{% url 'catalogue' %}" class="btn btn-outline-secondary">← Continuer mes achats</a>
+            <button type="submit" class="btn btn-success btn-lg">Payer {{ total }} FCFA</button>
+        </div>
+    </div>
+</form>
 {% else %}
 <div class="alert alert-info">Votre panier est vide.
     <a href="{% url 'catalogue' %}">Voir le catalogue</a>.</div>

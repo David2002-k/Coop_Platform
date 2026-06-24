@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-lg-3">
+        <nav class="admin-sidebar">
+            <div class="side-title">Administration</div>
+            <a href="{% url 'gestion' %}" class="{% if rubrique == 'tableau' %}actif{% endif %}">
+                📊 Tableau de bord</a>
+            <a href="{% url 'gestion_productions' %}" class="{% if rubrique == 'productions' %}actif{% endif %}">
+                ✅ Productions</a>
+            <a href="{% url 'gestion_membres' %}" class="{% if rubrique == 'membres' %}actif{% endif %}">
+                👥 Membres</a>
+            <a href="{% url 'catalogue' %}">🛒 Catalogue</a>
+            <a href="/admin/">⚙️ Admin technique</a>
+        </nav>
+    </div>
+    <div class="col-lg-9">
+        {% block gestion %}{% endblock %}
+    </div>
+</div>
+{% endblock %}

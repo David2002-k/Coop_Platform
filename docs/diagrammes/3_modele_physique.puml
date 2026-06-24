@@ -1,0 +1,154 @@
+@startuml
+!include _style.iuml
+title Modèle physique de données (schéma relationnel) — Coopératives Agricoles
+hide circle
+skinparam linetype ortho
+
+entity "utilisateur" as utilisateur {
+  * id_utilisateur : SERIAL <<PK>>
+  --
+  nom : VARCHAR(80)
+  prenom : VARCHAR(80)
+  email : VARCHAR(120) <<UNIQUE>>
+  mot_passe : VARCHAR(255)
+  telephone : VARCHAR(50)
+  adresse : VARCHAR(255)
+  role : VARCHAR(20)
+  actif : BOOLEAN
+}
+entity "cooperative" as cooperative {
+  * id_cooperative : SERIAL <<PK>>
+  --
+  nom : VARCHAR(150)
+  localisation : VARCHAR(150)
+  secteur_activite : VARCHAR(100)
+  date_creation : DATE
+}
+entity "membre" as membre {
+  * id_membre : INT <<PK>> <<FK>>
+  --
+  id_cooperative : INT <<FK>>
+  numero_adhesion : VARCHAR(30)
+  date_adhesion : DATE
+  montant_cotisation : NUMERIC(10,2)
+}
+entity "administrateur" as administrateur {
+  * id_administrateur : INT <<PK>> <<FK>>
+  --
+  id_cooperative : INT <<FK>>
+  fonction : VARCHAR(80)
+  niveau_acces : VARCHAR(20)
+}
+entity "acheteur" as acheteur {
+  * id_acheteur : INT <<PK>> <<FK>>
+  --
+  adresse_livraison : VARCHAR(200)
+}
+entity "formateur" as formateur {
+  * id_formateur : INT <<PK>> <<FK>>
+  --
+  specialite : VARCHAR(100)
+  biographie : TEXT
+}
+entity "livreur" as livreur {
+  * id_livreur : INT <<PK>> <<FK>>
+  --
+  vehicule : VARCHAR(50)
+  zone_couverture : VARCHAR(100)
+}
+entity "production" as production {
+  * id_production : SERIAL <<PK>>
+  --
+  id_membre : INT <<FK>>
+  type_culture : VARCHAR(80)
+  quantite : NUMERIC(10,2)
+  unite : VARCHAR(10)
+  date_recolte : DATE
+  statut_validation : BOOLEAN
+}
+entity "produit" as produit {
+  * id_produit : SERIAL <<PK>>
+  --
+  id_production : INT <<FK>>
+  nom : VARCHAR(120)
+  prix_unitaire : NUMERIC(10,2)
+  quantite_stock : NUMERIC(10,2)
+  disponible : BOOLEAN
+}
+entity "commande" as commande {
+  * id_commande : SERIAL <<PK>>
+  --
+  id_acheteur : INT <<FK>>
+  reference : VARCHAR(30) <<UNIQUE>>
+  montant_total : NUMERIC(10,2)
+  statut : VARCHAR(20)
+}
+entity "ligne_commande" as ligne_commande {
+  * id_ligne : SERIAL <<PK>>
+  --
+  id_commande : INT <<FK>>
+  id_produit : INT <<FK>>
+  quantite : NUMERIC(10,2)
+  sous_total : NUMERIC(10,2)
+}
+entity "paiement" as paiement {
+  * id_paiement : SERIAL <<PK>>
+  --
+  id_commande : INT <<FK>>
+  montant : NUMERIC(10,2)
+  methode : VARCHAR(30)
+  statut : VARCHAR(20)
+  reference_transaction : VARCHAR(60)
+}
+entity "livraison" as livraison {
+  * id_livraison : SERIAL <<PK>>
+  --
+  id_commande : INT <<FK>>
+  id_livreur : INT <<FK>>
+  adresse : VARCHAR(200)
+  statut : VARCHAR(20)
+}
+entity "recu" as recu {
+  * id_recu : SERIAL <<PK>>
+  --
+  id_paiement : INT <<FK>>
+  numero : VARCHAR(50)
+  montant : NUMERIC(10,2)
+}
+entity "formation" as formation {
+  * id_formation : SERIAL <<PK>>
+  --
+  id_formateur : INT <<FK>>
+  titre : VARCHAR(150)
+  contenu : TEXT
+  type_contenu : VARCHAR(20)
+}
+entity "suivi_formation" as suivi_formation {
+  * id_suivi : SERIAL <<PK>>
+  --
+  id_membre : INT <<FK>>
+  id_formation : INT <<FK>>
+  progression : NUMERIC(5,2)
+  score_quiz : NUMERIC(5,2)
+}
+
+utilisateur ||--o| membre
+utilisateur ||--o| administrateur
+utilisateur ||--o| acheteur
+utilisateur ||--o| formateur
+utilisateur ||--o| livreur
+cooperative ||--o{ membre
+cooperative ||--o{ administrateur
+membre ||--o{ production
+production ||--|| produit
+acheteur ||--o{ commande
+commande ||--o{ ligne_commande
+produit ||--o{ ligne_commande
+commande ||--|| paiement
+paiement ||--|| recu
+commande ||--|| livraison
+livreur ||--o{ livraison
+formateur ||--o{ formation
+membre ||--o{ suivi_formation
+formation ||--o{ suivi_formation
+@enduml

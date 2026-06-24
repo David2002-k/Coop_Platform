@@ -1,0 +1,56 @@
+@startuml
+!include _style.iuml
+title Diagramme de séquence — « Passer une commande »
+autonumber
+
+actor "Acheteur" as Acheteur
+participant "Interface Web\n(Django)" as Site
+database "Base de données\n(PostgreSQL)" as DB
+participant "MoneyFusion\n(Mobile Money)" as Pay
+
+Acheteur -> Site : Consulter le catalogue
+activate Site
+Site -> DB : Lire les produits disponibles
+activate DB
+DB --> Site : Liste des produits
+deactivate DB
+Site --> Acheteur : Afficher le catalogue
+deactivate Site
+
+Acheteur -> Site : Ajouter un produit au panier
+activate Site
+Site -> Site : Enregistrer le panier (session)
+Site --> Acheteur : Panier mis à jour
+deactivate Site
+
+Acheteur -> Site : Valider la commande + numéro Mobile Money
+activate Site
+Site -> DB : Créer Commande + LigneCommande (statut « en attente »)
+activate DB
+DB --> Site : Commande enregistrée
+deactivate DB
+Site -> Pay : Initier le paiement (montant, articles)
+activate Pay
+Pay --> Site : URL de paiement + token
+deactivate Pay
+Site --> Acheteur : Redirection vers la page de paiement
+deactivate Site
+
+Acheteur -> Pay : Payer via Mobile Money
+activate Pay
+Pay -> Site : Notification (webhook)
+Pay --> Acheteur : Confirmation de paiement
+deactivate Pay
+
+activate Site
+Site -> Pay : Vérifier le statut du paiement (token)
+activate Pay
+Pay --> Site : Statut = « payé »
+deactivate Pay
+Site -> DB : Paiement « payé », Commande « payée »,\ngénérer le Reçu, décrémenter le stock
+activate DB
+DB --> Site : Mise à jour confirmée
+deactivate DB
+Site --> Acheteur : Page « Commande confirmée » + reçu
+deactivate Site
+@enduml

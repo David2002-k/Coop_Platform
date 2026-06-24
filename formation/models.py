@@ -29,9 +29,15 @@ class Formation(models.Model):
         choices=TYPE_CONTENU,
         default='COURS'
     )
-     # Lien ou fichier de la formation
-    # Exemple : URL Youtube, chemin PDF
+     # Lien ou texte de la formation
+    # Exemple : URL Youtube, texte du cours
     contenu = models.TextField(
+        null=True,
+        blank=True
+    )
+    # Fichier téléchargeable (PDF, vidéo…)
+    fichier = models.FileField(
+        upload_to='formations/',
         null=True,
         blank=True
     )

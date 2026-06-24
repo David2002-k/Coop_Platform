@@ -50,11 +50,33 @@ class UtilisateurAdmin(UserAdmin):
     )
 
 
-admin.site.register(Membre)
-admin.site.register(Administrateur)
-admin.site.register(Acheteur)
-admin.site.register(Formateur)
-admin.site.register(Livreur)
+@admin.register(Membre)
+class MembreAdmin(admin.ModelAdmin):
+    list_display = ('utilisateur', 'cooperative', 'numero_adhesion', 'statut_cotisation')
+    list_filter = ('statut_cotisation', 'cooperative')
+    search_fields = ('numero_adhesion',)
+
+
+@admin.register(Administrateur)
+class AdministrateurAdmin(admin.ModelAdmin):
+    list_display = ('utilisateur', 'cooperative', 'fonction', 'niveau_acces')
+    list_filter = ('niveau_acces',)
+
+
+@admin.register(Acheteur)
+class AcheteurAdmin(admin.ModelAdmin):
+    list_display = ('utilisateur', 'adresse_livraison')
+
+
+@admin.register(Formateur)
+class FormateurAdmin(admin.ModelAdmin):
+    list_display = ('utilisateur', 'specialite')
+
+
+@admin.register(Livreur)
+class LivreurAdmin(admin.ModelAdmin):
+    list_display = ('utilisateur', 'vehicule', 'zone_couverture', 'disponible')
+    list_filter = ('disponible',)
 
 admin.site.site_header = "Administration — Coopératives Agricoles"
 admin.site.site_title = "Coopératives Agricoles"

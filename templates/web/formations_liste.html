@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Formations{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">🎓 Formations disponibles</h2>
+
+<div class="row g-4">
+    {% for f in formations %}
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <span class="badge bg-secondary mb-2">{{ f.get_type_contenu_display }}</span>
+                <h5 class="card-title">{{ f.titre }}</h5>
+                <p class="card-text text-muted small">{{ f.description|truncatewords:20 }}</p>
+                <p class="small mb-1">⏱️ {{ f.duree_estimee }}</p>
+                <p class="small text-muted">Par {{ f.formateur.utilisateur.prenom }}
+                    {{ f.formateur.utilisateur.nom }}</p>
+            </div>
+            <div class="card-footer bg-white border-0">
+                <a href="{% url 'formation_detail' f.id %}" class="btn btn-success btn-sm w-100">Consulter</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col"><div class="alert alert-info">Aucune formation disponible.</div></div>
+    {% endfor %}
+</div>
+{% endblock %}

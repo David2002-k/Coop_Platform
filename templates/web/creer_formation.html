@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Créer une formation{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2 class="mb-4">🎓 Créer une formation</h2>
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <form method="post" action="{% url 'creer_formation' %}"
+                      enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Titre</label>
+                        <input type="text" name="titre" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label class="form-label">Type de contenu</label>
+                            <select name="type_contenu" class="form-select">
+                                {% for code, libelle in types %}
+                                <option value="{{ code }}">{{ libelle }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col mb-3">
+                            <label class="form-label">Durée estimée</label>
+                            <input type="text" name="duree_estimee" class="form-control"
+                                   placeholder="Ex : 2h">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Contenu texte ou lien vidéo (YouTube…)</label>
+                        <textarea name="contenu" class="form-control" rows="3"
+                                  placeholder="Texte du cours, ou https://youtube.com/..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Fichier à télécharger (PDF ou vidéo)</label>
+                        <input type="file" name="fichier" class="form-control"
+                               accept=".pdf,.mp4,.avi,.mov,.webm">
+                        <div class="form-text">Optionnel — joignez un PDF ou une vidéo.</div>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Publier la formation</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
