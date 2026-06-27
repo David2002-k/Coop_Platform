@@ -5,9 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Plateforme des Coopératives Agricoles{% endblock %}</title>
     {% load static %}
+    <!-- Police Inter (repli automatique sur la police système hors-ligne) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Bootstrap embarqué localement (fonctionne sans Internet) -->
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    {% block extra_css %}{% endblock %}
 </head>
 <body class="d-flex flex-column min-vh-100">
     <nav class="navbar navbar-expand-lg navbar-dark bg-success">
@@ -62,14 +66,15 @@
         </div>
     </nav>
 
+    {% if messages %}
+    <div class="toast-zone" id="toastZone">
+        {% for message in messages %}
+        <div class="toast-msg {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     <main class="container my-5 flex-grow-1">
-        {% if messages %}
-            {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissible">
-                {{ message }}
-            </div>
-            {% endfor %}
-        {% endif %}
         {% block content %}{% endblock %}
     </main>
 
@@ -105,6 +110,23 @@
             </p>
         </div>
     </footer>
+
+    <!-- Modale de confirmation réutilisable (actions sensibles) -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius:14px;">
+          <div class="modal-header border-0">
+            <h5 class="modal-title" id="confirmTitre">Confirmer l'action</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body" id="confirmTexte">Êtes-vous sûr ?</div>
+          <div class="modal-footer border-0">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+            <button type="button" class="btn btn-danger" id="confirmOui">Confirmer</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>

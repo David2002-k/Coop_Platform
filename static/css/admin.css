@@ -1,0 +1,166 @@
+/* ============================================================
+   Design system du panneau d'administration
+   Inspiré de Stripe / Vercel / Tailwind UI
+   ============================================================ */
+
+:root {
+    --adm-bg: #f6f8fb;
+    --adm-surface: #ffffff;
+    --adm-border: #e6e9ef;
+    --adm-text: #0f172a;
+    --adm-muted: #64748b;
+    --adm-primary: #1b7f4b;
+    --adm-primary-d: #14633a;
+    --adm-primary-soft: #e7f6ee;
+    --adm-shadow: 0 1px 2px rgba(16,24,40,.06), 0 1px 3px rgba(16,24,40,.08);
+    --adm-shadow-lg: 0 10px 30px rgba(16,24,40,.12);
+    --adm-radius: 14px;
+}
+
+.admin-shell {
+    font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+    color: var(--adm-text);
+}
+
+/* ---------- Mode sombre (activé via body.dark-admin) ---------- */
+body.dark-admin { background: #0b1220 !important; }
+body.dark-admin .admin-shell {
+    --adm-bg: #111a2e;
+    --adm-surface: #1a2438;
+    --adm-border: #2b3a55;
+    --adm-text: #e6edf6;
+    --adm-muted: #9fb0c9;
+    --adm-primary: #34d399;
+    --adm-primary-d: #6ee7b7;
+    --adm-primary-soft: #14342a;
+    --adm-shadow: 0 1px 2px rgba(0,0,0,.4);
+    --adm-shadow-lg: 0 12px 34px rgba(0,0,0,.55);
+}
+body.dark-admin .adm-search input { color: var(--adm-text); }
+body.dark-admin .adm-search input::placeholder { color: var(--adm-muted); }
+/* Contraste des titres et textes en mode sombre */
+body.dark-admin .admin-shell h1,
+body.dark-admin .admin-shell h2,
+body.dark-admin .admin-shell h3,
+body.dark-admin .admin-shell .adm-top h1,
+body.dark-admin .admin-shell .panel-h h2 { color: var(--adm-text) !important; }
+body.dark-admin .admin-shell .data-table td { color: var(--adm-text); }
+body.dark-admin .admin-shell .data-table th { background: #0f1830; color: var(--adm-muted); }
+body.dark-admin .admin-shell .data-table tbody tr:hover { background: #16203a; }
+
+/* Bouton bascule thème */
+.theme-toggle {
+    width: 100%; margin-top: .4rem; border: 1px solid var(--adm-border);
+    background: var(--adm-bg); color: var(--adm-text); border-radius: 10px;
+    padding: .55rem .65rem; font-weight: 600; font-size: .9rem; cursor: pointer;
+    display: flex; align-items: center; gap: .55rem; justify-content: center;
+}
+.theme-toggle:hover { filter: brightness(.97); }
+
+/* ---------- Grille principale (sidebar + contenu) ---------- */
+.admin-grid { display: grid; grid-template-columns: 250px 1fr; gap: 1.5rem; }
+@media (max-width: 991px) { .admin-grid { grid-template-columns: 1fr; } }
+
+/* ---------- Sidebar ---------- */
+.adm-side {
+    background: var(--adm-surface);
+    border: 1px solid var(--adm-border);
+    border-radius: var(--adm-radius);
+    padding: .85rem;
+    box-shadow: var(--adm-shadow);
+    align-self: start;
+    position: sticky; top: 1rem;
+}
+.adm-side .brand {
+    display: flex; align-items: center; gap: .55rem;
+    font-weight: 700; padding: .4rem .6rem .8rem;
+    border-bottom: 1px solid var(--adm-border); margin-bottom: .6rem;
+}
+.adm-side .grp { font-size: .7rem; text-transform: uppercase; letter-spacing: .07em;
+    color: var(--adm-muted); padding: .8rem .65rem .35rem; }
+.adm-side a {
+    display: flex; align-items: center; gap: .65rem;
+    padding: .6rem .65rem; border-radius: 10px;
+    color: var(--adm-text); text-decoration: none; font-weight: 500; font-size: .94rem;
+    transition: background .12s ease, color .12s ease;
+}
+.adm-side a:hover { background: var(--adm-bg); }
+.adm-side a.on { background: var(--adm-primary-soft); color: var(--adm-primary-d); }
+.adm-side a .ic { width: 20px; text-align: center; }
+
+/* ---------- Topbar ---------- */
+.adm-top {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem; margin-bottom: 1.25rem; flex-wrap: wrap;
+}
+.adm-top h1 { font-size: 1.45rem; font-weight: 700; margin: 0; }
+.adm-top .sub { color: var(--adm-muted); font-size: .9rem; }
+.adm-search {
+    display: flex; align-items: center; gap: .5rem;
+    background: var(--adm-surface); border: 1px solid var(--adm-border);
+    border-radius: 10px; padding: .15rem .15rem .15rem .75rem;
+}
+.adm-search input { border: 0; outline: 0; padding: .45rem; min-width: 200px; background: transparent; }
+
+/* ---------- Cartes métriques ---------- */
+.metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+@media (max-width: 991px) { .metrics { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 540px) { .metrics { grid-template-columns: 1fr; } }
+.metric {
+    background: var(--adm-surface); border: 1px solid var(--adm-border);
+    border-radius: var(--adm-radius); padding: 1.1rem 1.2rem; box-shadow: var(--adm-shadow);
+}
+.metric .lbl { color: var(--adm-muted); font-size: .8rem; font-weight: 500;
+    display: flex; align-items: center; gap: .4rem; }
+.metric .val { font-size: 1.9rem; font-weight: 700; margin-top: .35rem; line-height: 1; }
+.metric .hint { font-size: .78rem; margin-top: .4rem; }
+
+/* ---------- Cartes / panneaux ---------- */
+.panel {
+    background: var(--adm-surface); border: 1px solid var(--adm-border);
+    border-radius: var(--adm-radius); box-shadow: var(--adm-shadow);
+}
+.panel .panel-h {
+    padding: 1rem 1.2rem; border-bottom: 1px solid var(--adm-border);
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+}
+.panel .panel-h h2 { font-size: 1rem; font-weight: 600; margin: 0; }
+.panel .panel-b { padding: 1.2rem; }
+
+/* ---------- Badges de statut (doux, contraste accessible) ---------- */
+.badge-soft { display: inline-flex; align-items: center; gap: .35rem;
+    padding: .2rem .6rem; border-radius: 999px; font-size: .78rem; font-weight: 600; }
+.badge-soft::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.b-ok   { background: #e7f6ee; color: #16794c; }
+.b-warn { background: #fdf1dd; color: #b45309; }
+.b-dang { background: #fde8e8; color: #b42318; }
+.b-info { background: #e7eefc; color: #1d4ed8; }
+.b-neutre { background: #eef1f5; color: #475569; }
+
+/* ---------- Tableaux ---------- */
+.data-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+.data-table th { text-align: left; font-size: .75rem; text-transform: uppercase;
+    letter-spacing: .04em; color: var(--adm-muted); padding: .7rem 1rem; background: var(--adm-bg); }
+.data-table td { padding: .8rem 1rem; border-top: 1px solid var(--adm-border); font-size: .92rem; }
+.data-table tbody tr:hover { background: #fafbfc; }
+
+/* ---------- Boutons ---------- */
+.btn-adm { border: 0; border-radius: 10px; padding: .5rem .9rem; font-weight: 600;
+    font-size: .88rem; cursor: pointer; text-decoration: none; display: inline-flex;
+    align-items: center; gap: .4rem; transition: filter .12s ease; }
+.btn-adm:hover { filter: brightness(.96); }
+.btn-adm.primary { background: var(--adm-primary); color: #fff; }
+.btn-adm.ghost { background: var(--adm-bg); color: var(--adm-text); border: 1px solid var(--adm-border); }
+.btn-adm.danger { background: #fde8e8; color: #b42318; }
+.btn-adm.sm { padding: .35rem .6rem; font-size: .82rem; }
+
+/* ---------- Toasts ---------- */
+.toast-zone { position: fixed; top: 1rem; right: 1rem; z-index: 1080;
+    display: flex; flex-direction: column; gap: .6rem; max-width: 360px; }
+.toast-msg { background: var(--adm-surface); border: 1px solid var(--adm-border);
+    border-left: 4px solid var(--adm-muted); border-radius: 10px; padding: .8rem 1rem;
+    box-shadow: var(--adm-shadow-lg); animation: toastin .25s ease; }
+.toast-msg.success { border-left-color: var(--adm-primary); }
+.toast-msg.danger  { border-left-color: #b42318; }
+.toast-msg.warning { border-left-color: #b45309; }
+@keyframes toastin { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: none; } }

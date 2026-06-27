@@ -1,36 +1,41 @@
 {% extends 'web/gestion/base_gestion.html' %}
-{% block title %}Gestion des membres{% endblock %}
+{% block title %}Membres{% endblock %}
 
 {% block gestion %}
-<h2 class="mb-1">Membres de la coopérative</h2>
-<p class="text-muted">{{ membres|length }} adhérent(s) enregistré(s).</p>
+<div class="adm-top">
+    <div>
+        <h1>Membres</h1>
+        <div class="sub">{{ membres|length }} adhérent(s) enregistré(s)</div>
+    </div>
+    <form method="get" class="adm-search">
+        🔎 <input type="search" name="q" value="{{ recherche }}" placeholder="Rechercher un membre…">
+    </form>
+</div>
 
-<div class="card shadow-sm">
+<div class="panel">
     <div class="table-responsive">
-        <table class="table table-striped align-middle mb-0">
-            <thead class="table-success">
-                <tr>
-                    <th>Nom</th><th>Email</th><th>Coopérative</th>
-                    <th>N° adhésion</th><th>Cotisation</th>
-                </tr>
+        <table class="data-table">
+            <thead>
+                <tr><th>Nom</th><th>Email</th><th>Coopérative</th>
+                    <th>N° adhésion</th><th>Cotisation</th></tr>
             </thead>
             <tbody>
                 {% for m in membres %}
                 <tr>
-                    <td>{{ m.utilisateur.prenom }} {{ m.utilisateur.nom }}</td>
+                    <td><strong>{{ m.utilisateur.prenom }} {{ m.utilisateur.nom }}</strong></td>
                     <td>{{ m.utilisateur.email }}</td>
                     <td>{{ m.cooperative.nom|default:"—" }}</td>
                     <td>{{ m.numero_adhesion }}</td>
                     <td>
                         {% if m.statut_cotisation %}
-                            <span class="badge bg-success">À jour</span>
+                            <span class="badge-soft b-ok">À jour</span>
                         {% else %}
-                            <span class="badge bg-danger">Non payée</span>
+                            <span class="badge-soft b-dang">Non payée</span>
                         {% endif %}
                     </td>
                 </tr>
                 {% empty %}
-                <tr><td colspan="5" class="text-center text-muted py-4">Aucun membre.</td></tr>
+                <tr><td colspan="5" class="text-center text-muted py-4">Aucun membre trouvé.</td></tr>
                 {% endfor %}
             </tbody>
         </table>

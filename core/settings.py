@@ -200,6 +200,7 @@ JAZZMIN_SETTINGS = {
     "site_title": "Administration",
     "site_header": "Coopératives Agricoles",
     "site_brand": "🌾 Coopératives",
+    "site_url": "/",  # lien « Voir le site » -> page d'accueil publique
     "welcome_sign": "Bienvenue dans l'administration",
     "copyright": "Coopératives Agricoles",
     "search_model": ["users.Utilisateur", "productions.Produit", "sales.Commande"],
@@ -244,6 +245,8 @@ JAZZMIN_SETTINGS = {
     "default_icon_parents": "fas fa-chevron-circle-right",
     "default_icon_children": "fas fa-circle",
     "related_modal_active": False,  # édition en pleine page (enregistrement fiable)
+    "changeform_format": "horizontal_tabs",  # formulaires en onglets, plus clairs
+    "custom_css": "css/admin_jazzmin.css",   # personnalisation (cache la version, etc.)
     "show_ui_builder": False,
 }
 

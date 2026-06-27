@@ -2,39 +2,44 @@
 {% block title %}Validation des productions{% endblock %}
 
 {% block gestion %}
-<h2 class="mb-1">Productions déclarées</h2>
-<p class="text-muted">Validez une récolte et fixez son prix pour la publier au catalogue.</p>
+<div class="adm-top">
+    <div>
+        <h1>Productions</h1>
+        <div class="sub">Validez une récolte et fixez son prix pour la publier au catalogue</div>
+    </div>
+</div>
 
-<div class="card shadow-sm">
+<div class="panel">
+    <div class="panel-h"><h2>Récoltes déclarées</h2></div>
     <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0">
-            <thead class="table-success">
-                <tr>
-                    <th>Agriculteur</th><th>Culture</th><th>Quantité</th>
-                    <th>Récolte</th><th>Statut</th><th>Action</th>
-                </tr>
+        <table class="data-table">
+            <thead>
+                <tr><th>Agriculteur</th><th>Culture</th><th>Quantité</th>
+                    <th>Récolte</th><th>Statut</th><th>Action</th></tr>
             </thead>
             <tbody>
                 {% for p in productions %}
                 <tr>
                     <td>{{ p.membre.utilisateur.prenom }} {{ p.membre.utilisateur.nom }}</td>
-                    <td>{{ p.nom }} <span class="text-muted small">({{ p.type_culture }})</span></td>
+                    <td><strong>{{ p.nom }}</strong>
+                        <div class="text-muted small">{{ p.type_culture }}</div></td>
                     <td>{{ p.quantite }} {{ p.unite }}</td>
                     <td>{{ p.date_recolte }}</td>
                     <td>
                         {% if p.statut_validation %}
-                            <span class="badge bg-success">Validée</span>
+                            <span class="badge-soft b-ok">Validée</span>
                         {% else %}
-                            <span class="badge bg-warning text-dark">En attente</span>
+                            <span class="badge-soft b-warn">En attente</span>
                         {% endif %}
                     </td>
                     <td>
                         {% if not p.statut_validation and peut_gerer %}
-                        <form method="post" action="{% url 'valider_production' p.id %}" class="d-flex gap-1">
+                        <form method="post" action="{% url 'valider_production' p.id %}"
+                              class="d-flex gap-2" data-confirm="Valider cette production et la publier au catalogue ?">
                             {% csrf_token %}
                             <input type="number" name="prix_unitaire" class="form-control form-control-sm"
                                    style="width:120px" placeholder="Prix FCFA" required>
-                            <button class="btn btn-success btn-sm">Valider</button>
+                            <button class="btn-adm primary sm">Valider</button>
                         </form>
                         {% elif p.statut_validation %}
                             <span class="text-muted small">Publiée</span>

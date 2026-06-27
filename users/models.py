@@ -132,6 +132,13 @@ class Membre(models.Model):
         decimal_places=2
     )
 
+    class Meta:
+        verbose_name = "Membre"
+        verbose_name_plural = "Membres"
+
+    def __str__(self):
+        return f"{self.utilisateur.prenom} {self.utilisateur.nom}"
+
 
 """
  TABLE : ADMINISTRATEUR
@@ -179,6 +186,13 @@ class Administrateur(models.Model):
     def peut_tout(self):
         """Accès complet (paramétrage, suppression…)."""
         return self.niveau_acces == 'TOTAL'
+
+    class Meta:
+        verbose_name = "Administrateur"
+        verbose_name_plural = "Administrateurs"
+
+    def __str__(self):
+        return f"{self.utilisateur.prenom} {self.utilisateur.nom} — {self.fonction}"
 """
 TABLE : ACHETEUR
 Client qui achète les produits agricoles
@@ -192,6 +206,13 @@ class Acheteur(models.Model):
     )
     # Adresse où les commandes seront livrées
     adresse_livraison = models.CharField(max_length=200)
+
+    class Meta:
+        verbose_name = "Acheteur"
+        verbose_name_plural = "Acheteurs"
+
+    def __str__(self):
+        return f"{self.utilisateur.prenom} {self.utilisateur.nom}"
 
 """
 TABLE : FORMATEUR
@@ -207,6 +228,13 @@ class Formateur(models.Model):
     specialite = models.CharField(max_length=100)
     # Présentation du formateur
     biographie = models.TextField()
+
+    class Meta:
+        verbose_name = "Formateur"
+        verbose_name_plural = "Formateurs"
+
+    def __str__(self):
+        return f"{self.utilisateur.prenom} {self.utilisateur.nom}"
 """
 TABLE : LIVREUR
 Personne responsable du transport des commandes
@@ -223,3 +251,10 @@ class Livreur(models.Model):
     zone_couverture = models.CharField(max_length=100)
     # Disponible pour une nouvelle livraison ?
     disponible = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = "Livreur"
+        verbose_name_plural = "Livreurs"
+
+    def __str__(self):
+        return f"{self.utilisateur.prenom} {self.utilisateur.nom}"

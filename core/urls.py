@@ -56,6 +56,9 @@ urlpatterns = [
     path('gestion/productions/<int:production_id>/valider/',
          web.valider_production, name='valider_production'),
     path('gestion/membres/', web.gestion_membres, name='gestion_membres'),
+    path('gestion/produits/', web.gestion_produits, name='gestion_produits'),
+    path('gestion/produits/<int:produit_id>/toggle/', web.produit_toggle, name='produit_toggle'),
+    path('gestion/produits/<int:produit_id>/supprimer/', web.produit_supprimer, name='produit_supprimer'),
 
     # Interface d'administration Django (technique)
     path('admin/', admin.site.urls),

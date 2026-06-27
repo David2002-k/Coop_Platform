@@ -1,0 +1,66 @@
+{% extends 'web/gestion/base_gestion.html' %}
+{% block title %}Produits{% endblock %}
+
+{% block gestion %}
+<div class="adm-top">
+    <div>
+        <h1>Produits</h1>
+        <div class="sub">Gérer la disponibilité et le catalogue</div>
+    </div>
+    <form method="get" class="adm-search">
+        🔎 <input type="search" name="q" value="{{ recherche }}" placeholder="Rechercher un produit…">
+    </form>
+</div>
+
+<div class="panel">
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr><th>Produit</th><th>Prix</th><th>Stock</th>
+                    <th>Disponibilité</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+                {% for p in produits %}
+                <tr>
+                    <td><strong>{{ p.nom }}</strong>
+                        <div class="text-muted small">{{ p.description|truncatewords:6 }}</div></td>
+                    <td>{{ p.prix_unitaire }} FCFA</td>
+                    <td>
+                        {% if p.quantite_stock > 0 %}
+                            <span class="badge-soft b-info">{{ p.quantite_stock }}</span>
+                        {% else %}
+                            <span class="badge-soft b-dang">Rupture</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if p.diponible %}
+                            <span class="badge-soft b-ok">Disponible</span>
+                        {% else %}
+                            <span class="badge-soft b-neutre">Masqué</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if peut_gerer %}
+                        <div class="d-flex gap-2">
+                            <form method="post" action="{% url 'produit_toggle' p.id %}">
+                                {% csrf_token %}
+                                <button class="btn-adm ghost sm">
+                                    {% if p.diponible %}Désactiver{% else %}Activer{% endif %}</button>
+                            </form>
+                            <form method="post" action="{% url 'produit_supprimer' p.id %}"
+                                  data-confirm="Supprimer définitivement « {{ p.nom }} » ? Cette action est irréversible.">
+                                {% csrf_token %}
+                                <button class="btn-adm danger sm">Supprimer</button>
+                            </form>
+                        </div>
+                        {% else %}<span class="text-muted small">—</span>{% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" class="text-center text-muted py-4">Aucun produit.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

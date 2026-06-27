@@ -1,0 +1,21 @@
+/* Personnalisation de l'admin technique (Jazzmin) */
+
+/* Masquer la mention de version dans le pied de page */
+.app-footer .float-end,
+.main-footer .float-right,
+footer a[href*="jazzmin"] { display: none !important; }
+
+/* Pied de page plus discret */
+.app-footer, .main-footer { font-size: .85rem; color: #6b7280; }
+
+/* Coins arrondis et espacements plus doux */
+.card, .btn, .form-control, .select2-container--default .select2-selection {
+    border-radius: 10px !important;
+}
+.content-header h1 { font-weight: 600; }
+
+/* Listes de permissions (double colonne) plus lisibles */
+.selector select { min-height: 220px; border-radius: 10px; }
+.selector-available h2, .selector-chosen h2 {
+    background: #1b7f4b; color: #fff; border-radius: 8px 8px 0 0;
+}

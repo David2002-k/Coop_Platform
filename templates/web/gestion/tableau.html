@@ -2,144 +2,86 @@
 {% block title %}Administration{% endblock %}
 
 {% block gestion %}
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="adm-top">
     <div>
-        <h2 class="mb-0">Tableau de bord</h2>
-        <p class="text-muted mb-0">Pilotage de la coopérative</p>
+        <h1>Tableau de bord</h1>
+        <div class="sub">Vue d'ensemble de la coopérative</div>
     </div>
-    <span class="badge bg-dark fs-6 align-self-start">Niveau : {{ niveau }}</span>
+    <span class="badge-soft b-info">Niveau&nbsp;: {{ niveau }}</span>
 </div>
 
-<div class="row g-3 mb-4">
-    <div class="col-sm-6 col-xl-3">
-        <div class="stat-card">
-            <div class="stat-ico">👥</div>
-            <div><div class="stat-val">{{ nb_membres }}</div>
-                 <div class="stat-lib">Membres</div></div>
-        </div>
+<div class="metrics mb-4">
+    <div class="metric">
+        <div class="lbl">👥 Membres</div>
+        <div class="val">{{ nb_membres }}</div>
+        <div class="hint badge-soft b-neutre">Communauté</div>
     </div>
-    <div class="col-sm-6 col-xl-3">
-        <div class="stat-card">
-            <div class="stat-ico">⏳</div>
-            <div><div class="stat-val">{{ nb_productions_attente }}</div>
-                 <div class="stat-lib">À valider</div></div>
-        </div>
+    <div class="metric">
+        <div class="lbl">⏳ À valider</div>
+        <div class="val">{{ nb_productions_attente }}</div>
+        <div class="hint badge-soft b-warn">En attente</div>
     </div>
-    <div class="col-sm-6 col-xl-3">
-        <div class="stat-card">
-            <div class="stat-ico">📦</div>
-            <div><div class="stat-val">{{ nb_produits }}</div>
-                 <div class="stat-lib">Produits</div></div>
-        </div>
+    <div class="metric">
+        <div class="lbl">📦 Produits</div>
+        <div class="val">{{ nb_produits }}</div>
+        <div class="hint badge-soft b-info">Catalogue</div>
     </div>
-    <div class="col-sm-6 col-xl-3">
-        <div class="stat-card">
-            <div class="stat-ico">💰</div>
-            <div><div class="stat-val">{{ total_ventes }}</div>
-                 <div class="stat-lib">Ventes (FCFA)</div></div>
-        </div>
+    <div class="metric">
+        <div class="lbl">💰 Ventes</div>
+        <div class="val">{{ total_ventes }}</div>
+        <div class="hint badge-soft b-ok">FCFA encaissés</div>
     </div>
 </div>
 
-<div class="row g-3 mb-4">
+<div class="row g-3 mb-3">
     <div class="col-lg-8">
-        <div class="card shadow-sm h-100">
-            <div class="card-body">
-                <h6 class="mb-3">Évolution des ventes (6 derniers mois)</h6>
-                <canvas id="graphVentes" height="120"></canvas>
-            </div>
+        <div class="panel h-100">
+            <div class="panel-h"><h2>Évolution des ventes</h2>
+                <span class="badge-soft b-neutre">6 derniers mois</span></div>
+            <div class="panel-b"><canvas id="graphVentes" height="120"></canvas></div>
         </div>
     </div>
     <div class="col-lg-4">
-        <div class="card shadow-sm h-100">
-            <div class="card-body">
-                <h6 class="mb-3">Commandes par statut</h6>
-                <canvas id="graphStatuts" height="220"></canvas>
-            </div>
+        <div class="panel h-100">
+            <div class="panel-h"><h2>Commandes par statut</h2></div>
+            <div class="panel-b"><canvas id="graphStatuts" height="220"></canvas></div>
         </div>
     </div>
 </div>
 
-<div class="row g-3">
-    <div class="col-lg-6">
-        <div class="card shadow-sm h-100">
-            <div class="card-body">
-                <h6 class="mb-3">Top 5 des produits commandés</h6>
-                <canvas id="graphTop" height="160"></canvas>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-6">
-        <div class="row g-3">
-            <div class="col-12">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body d-flex justify-content-between align-items-center">
-                        <div><h6 class="mb-1">✅ Valider les productions</h6>
-                            <span class="text-muted small">{{ nb_productions_attente }} en attente</span></div>
-                        <a href="{% url 'gestion_productions' %}" class="btn btn-success btn-sm">Ouvrir</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body d-flex justify-content-between align-items-center">
-                        <div><h6 class="mb-1">👥 Gérer les membres</h6>
-                            <span class="text-muted small">{{ nb_membres }} adhérents</span></div>
-                        <a href="{% url 'gestion_membres' %}" class="btn btn-success btn-sm">Ouvrir</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="panel">
+    <div class="panel-h"><h2>Top 5 des produits commandés</h2></div>
+    <div class="panel-b"><canvas id="graphTop" height="90"></canvas></div>
 </div>
 
 {% load static %}
 <script src="{% static 'js/chart.min.js' %}"></script>
 <script>
 (function () {
-    const vert = '#2e7d32', vertClair = 'rgba(46,125,50,.15)';
-    const palette = ['#2e7d32', '#f9a825', '#1565c0', '#c62828', '#6a1b9a', '#00838f'];
+    const vert = '#1b7f4b', vertSoft = 'rgba(27,127,75,.14)';
+    const palette = ['#1b7f4b', '#b45309', '#1d4ed8', '#b42318', '#6a1b9a', '#00838f'];
+    const opts = { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } };
 
     new Chart(document.getElementById('graphVentes'), {
         type: 'line',
-        data: {
-            labels: {{ ventes_labels|safe }},
-            datasets: [{
-                label: 'Ventes (FCFA)',
-                data: {{ ventes_valeurs|safe }},
-                borderColor: vert, backgroundColor: vertClair,
-                fill: true, tension: .35, pointRadius: 4
-            }]
-        },
-        options: { plugins: { legend: { display: false } },
-                   scales: { y: { beginAtZero: true } } }
+        data: { labels: {{ ventes_labels|safe }},
+            datasets: [{ label: 'Ventes (FCFA)', data: {{ ventes_valeurs|safe }},
+                borderColor: vert, backgroundColor: vertSoft, fill: true, tension: .35, pointRadius: 4 }] },
+        options: opts
     });
-
     new Chart(document.getElementById('graphStatuts'), {
         type: 'doughnut',
-        data: {
-            labels: {{ statuts_labels|safe }},
-            datasets: [{ data: {{ statuts_valeurs|safe }}, backgroundColor: palette }]
-        },
-        options: { plugins: { legend: { position: 'bottom' } } }
+        data: { labels: {{ statuts_labels|safe }},
+            datasets: [{ data: {{ statuts_valeurs|safe }}, backgroundColor: palette }] },
+        options: { plugins: { legend: { position: 'bottom' } }, cutout: '62%' }
     });
-
     new Chart(document.getElementById('graphTop'), {
         type: 'bar',
-        data: {
-            labels: {{ top_labels|safe }},
-            datasets: [{ label: 'Quantité', data: {{ top_valeurs|safe }},
-                         backgroundColor: vert }]
-        },
+        data: { labels: {{ top_labels|safe }},
+            datasets: [{ data: {{ top_valeurs|safe }}, backgroundColor: vert, borderRadius: 6 }] },
         options: { indexAxis: 'y', plugins: { legend: { display: false } },
                    scales: { x: { beginAtZero: true } } }
     });
 })();
 </script>
-
-{% if not peut_gerer %}
-<div class="alert alert-warning mt-4">
-    Niveau d'accès <strong>{{ niveau }}</strong> : consultation seule, sans modification.
-</div>
-{% endif %}
 {% endblock %}

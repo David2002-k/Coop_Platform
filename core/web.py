@@ -14,6 +14,7 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
+from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
@@ -669,9 +670,61 @@ def valider_production(request, production_id):
 
 @login_required
 def gestion_membres(request):
-    """Liste des membres de la coopérative."""
+    """Liste des membres de la coopérative, avec recherche."""
     if not (request.user.is_staff or hasattr(request.user, 'administrateur')):
         return redirect('tableau_de_bord')
+    recherche = request.GET.get('q', '').strip()
     membres = Membre.objects.select_related('utilisateur', 'cooperative')
+    if recherche:
+        membres = membres.filter(
+            Q(utilisateur__nom__icontains=recherche) |
+            Q(utilisateur__prenom__icontains=recherche) |
+            Q(utilisateur__email__icontains=recherche))
     return render(request, 'web/gestion/membres.html',
-                  {'rubrique': 'membres', 'membres': membres})
+                  {'rubrique': 'membres', 'membres': membres, 'recherche': recherche})
+
+
+@login_required
+def gestion_produits(request):
+    """Gestion du catalogue : activer/désactiver, supprimer un produit."""
+    if not (request.user.is_staff or hasattr(request.user, 'administrateur')):
+        return redirect('tableau_de_bord')
+    recherche = request.GET.get('q', '').strip()
+    produits = Produit.objects.select_related('production')
+    if recherche:
+        produits = produits.filter(nom__icontains=recherche)
+    return render(request, 'web/gestion/produits.html', {
+        'rubrique': 'produits',
+        'produits': produits,
+        'recherche': recherche,
+        'peut_gerer': _admin_peut_gerer(request.user),
+    })
+
+
+@login_required
+@require_POST
+def produit_toggle(request, produit_id):
+    """Active ou désactive la disponibilité d'un produit."""
+    if not _admin_peut_gerer(request.user):
+        messages.error(request, "Action non autorisée pour votre niveau d'accès.")
+        return redirect('gestion_produits')
+    produit = get_object_or_404(Produit, pk=produit_id)
+    produit.diponible = not produit.diponible
+    produit.save()
+    etat = "activé" if produit.diponible else "désactivé"
+    messages.success(request, f"Produit « {produit.nom} » {etat}.")
+    return redirect('gestion_produits')
+
+
+@login_required
+@require_POST
+def produit_supprimer(request, produit_id):
+    """Supprime un produit du catalogue (action sécurisée par confirmation)."""
+    if not _admin_peut_gerer(request.user):
+        messages.error(request, "Action non autorisée pour votre niveau d'accès.")
+        return redirect('gestion_produits')
+    produit = get_object_or_404(Produit, pk=produit_id)
+    nom = produit.nom
+    produit.delete()
+    messages.warning(request, f"Produit « {nom} » supprimé.")
+    return redirect('gestion_produits')

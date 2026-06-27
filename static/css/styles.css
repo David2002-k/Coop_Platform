@@ -161,6 +161,22 @@ footer a:hover { color: var(--vert-clair); }
 .module-nom { font-weight: 600; color: var(--texte); }
 .module-desc { font-size: .82rem; color: var(--texte-doux); }
 
+/* ---------- Toasts (feedback global) ---------- */
+.toast-zone {
+    position: fixed; top: 1rem; right: 1rem; z-index: 1080;
+    display: flex; flex-direction: column; gap: .6rem; max-width: 360px;
+}
+.toast-msg {
+    background: #fff; border: 1px solid var(--gris-bord);
+    border-left: 4px solid var(--texte-doux); border-radius: 10px;
+    padding: .8rem 1rem; box-shadow: 0 10px 30px rgba(16,24,40,.14);
+    animation: toastin .25s ease;
+}
+.toast-msg.success { border-left-color: var(--vert-clair); }
+.toast-msg.danger  { border-left-color: #b42318; }
+.toast-msg.warning { border-left-color: #b45309; }
+@keyframes toastin { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: none; } }
+
 /* ---------- Étiquettes produits (mission) ---------- */
 .odd-tag {
     background: var(--vert-pale);

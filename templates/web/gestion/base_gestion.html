@@ -1,22 +1,38 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/admin.css' %}">{% endblock %}
 
 {% block content %}
-<div class="row g-4">
-    <div class="col-lg-3">
-        <nav class="admin-sidebar">
-            <div class="side-title">Administration</div>
-            <a href="{% url 'gestion' %}" class="{% if rubrique == 'tableau' %}actif{% endif %}">
-                📊 Tableau de bord</a>
-            <a href="{% url 'gestion_productions' %}" class="{% if rubrique == 'productions' %}actif{% endif %}">
-                ✅ Productions</a>
-            <a href="{% url 'gestion_membres' %}" class="{% if rubrique == 'membres' %}actif{% endif %}">
-                👥 Membres</a>
-            <a href="{% url 'catalogue' %}">🛒 Catalogue</a>
-            <a href="/admin/">⚙️ Admin technique</a>
-        </nav>
-    </div>
-    <div class="col-lg-9">
-        {% block gestion %}{% endblock %}
-    </div>
+<div class="admin-shell">
+  <div class="admin-grid">
+
+    {# ---------- Menu latéral ---------- #}
+    <aside class="adm-side">
+      <div class="brand">🌾 <span>Administration</span></div>
+      <div class="grp">Pilotage</div>
+      <a href="{% url 'gestion' %}" class="{% if rubrique == 'tableau' %}on{% endif %}">
+        <span class="ic">📊</span> Tableau de bord</a>
+      <div class="grp">Catalogue</div>
+      <a href="{% url 'gestion_productions' %}" class="{% if rubrique == 'productions' %}on{% endif %}">
+        <span class="ic">✅</span> Productions</a>
+      <a href="{% url 'gestion_produits' %}" class="{% if rubrique == 'produits' %}on{% endif %}">
+        <span class="ic">📦</span> Produits</a>
+      <div class="grp">Communauté</div>
+      <a href="{% url 'gestion_membres' %}" class="{% if rubrique == 'membres' %}on{% endif %}">
+        <span class="ic">👥</span> Membres</a>
+      <div class="grp">Système</div>
+      <a href="/admin/"><span class="ic">⚙️</span> Admin technique</a>
+      <a href="{% url 'home' %}"><span class="ic">↩️</span> Retour au site</a>
+      <button type="button" class="theme-toggle" id="themeToggle">
+        <span id="themeIcon">🌙</span> <span id="themeLabel">Mode sombre</span>
+      </button>
+    </aside>
+
+    {# ---------- Contenu ---------- #}
+    <section class="adm-content">
+      {% block gestion %}{% endblock %}
+    </section>
+
+  </div>
 </div>
 {% endblock %}
